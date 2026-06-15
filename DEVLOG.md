@@ -65,3 +65,19 @@ Validation result: pass. No gameplay files were modified during this validation 
 - Stopped Play Mode with Hera and re-checked the Unity console; no errors were returned.
 
 Validation result: pass. Existing MVP loop remains intact with conservative readability, feedback, UI, and early pacing improvements.
+
+## 2026-06-16 - Documentation Review And Playtest Checklist
+
+- Ran `git status --short` on branch `ai-polish-pass-01`; working tree was clean before documentation edits.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`.
+- Console status before documentation edits: no Unity errors returned.
+- Active scene: `Assets/Scenes/SampleScene.unity`, loaded and not dirty, with the expected seven root objects.
+- Reviewed the current scripts under `Assets/Scripts/` without changing gameplay code, systems, or balance values.
+- Added `PLAYTEST_CHECKLIST.md` covering quick start, a 5-minute manual pass, movement, combat, enemy spawning, XP, upgrades, game over/restart, UI readability, game feel, balance observations, bugs to watch for, and suggested next tasks.
+- Re-checked `/Users/dongttak/go/bin/hera-agent-unity console --type error` after documentation edits; no Unity errors were returned.
+
+Known limitations to watch during manual playtest:
+- The game still uses runtime-generated placeholder visuals only.
+- There are no arena bounds, audio, enemy variants, weapon variants, boss encounters, save/load, or main menu.
+- UI is built with legacy uGUI text at runtime; verify readability at the Game view sizes used for testing.
+- The Play Mode loop has been smoke-tested through Hera, but real-feel balance still needs human playtime.
