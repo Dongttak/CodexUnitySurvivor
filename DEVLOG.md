@@ -1,0 +1,51 @@
+# DEVLOG
+
+## 2026-06-16 - Unity Automation Readiness Check
+
+- Read `AGENTS.md` and confirmed the project rules require Hera Unity verification before Unity-related work.
+- Confirmed this is a Unity project workspace with `Assets`, `Packages`, `ProjectSettings`, and `Library` present.
+- `hera-agent-unity` is installed at `/Users/dongttak/go/bin/hera-agent-unity`; it is not on the shell `PATH`.
+- Ran `/Users/dongttak/go/bin/hera-agent-unity status`: Unity is ready on port `8090`.
+- Unity project path: `/Users/dongttak/CodexUnitySurvivor/My project`.
+- Unity version: `6000.3.16f1`.
+- Unity Editor PID: `17711`.
+- Ran `/Users/dongttak/go/bin/hera-agent-unity list`: command catalog returned successfully.
+- Ran `/Users/dongttak/go/bin/hera-agent-unity console --type error`: no console errors returned.
+- Inspected scenes with `/Users/dongttak/go/bin/hera-agent-unity scene --action info` and `scene --action list`.
+- Active scene: `SampleScene` at `Assets/Scenes/SampleScene.unity`; loaded, enabled, and not dirty.
+- Scene root objects from `find_gameobjects --limit 0`: `Main Camera` and `Global Light 2D`.
+- No gameplay files, assets, scenes, prefabs, packages, or project settings were modified.
+
+Readiness: ready for autonomous Unity game generation. Use `/Users/dongttak/go/bin/hera-agent-unity` for Hera commands unless the shell `PATH` is updated.
+
+## 2026-06-16 - Playable Survival MVP
+
+- Re-ran Hera preflight using `/Users/dongttak/go/bin/hera-agent-unity status`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`.
+- Confirmed Unity Editor was connected, `SampleScene` was active, and the console had no errors before implementation.
+- Created modular gameplay scripts under `Assets/Scripts/` for game state, player movement/health, camera follow, enemies, spawning, auto-attacks, projectiles, XP orbs, leveling, upgrades, UI, and runtime placeholder sprites.
+- Refreshed Unity assets and requested compilation through Hera after script creation; console error checks stayed clean.
+- Used Hera editor execution to create/reuse scene objects: `GameManager`, `Player`, `EnemySpawner`, `Canvas`, `EventSystem`, and `CameraFollow` on `Main Camera`.
+- Saved `Assets/Scenes/SampleScene.unity` through Hera after scene setup.
+- Added keyboard fallbacks for level-up choices (`1`, `2`, `3`) and game-over restart (`R`) so the MVP remains playable with the project's new Input System configuration.
+- Ran a Play Mode smoke test through Hera. Runtime UI initialized, the enemy spawn path was validated, and console error checks remained clean.
+- Updated `README.md` with run instructions, controls, implemented systems, and scene setup notes.
+
+Current state: playable placeholder MVP implemented. Unity console has no reported errors after the final verification pass.
+
+## 2026-06-16 - Automated MVP Validation Pass
+
+- Ran `/Users/dongttak/go/bin/hera-agent-unity status`: Unity Editor was ready on port `8090`.
+- Ran `/Users/dongttak/go/bin/hera-agent-unity list` as required by the project verification workflow; command catalog returned successfully.
+- Ran `/Users/dongttak/go/bin/hera-agent-unity console --type error`: no errors were returned before validation.
+- Inspected the active scene with `scene --action info`: `Assets/Scenes/SampleScene.unity` was loaded, active, and not dirty.
+- Inspected root GameObjects with `find_gameobjects --limit 0`; confirmed `GameManager`, `Player`, `EnemySpawner`, `Main Camera`, `Canvas`, `EventSystem`, and `Global Light 2D` exist.
+- Entered Play Mode with `manage_editor --action play`.
+- Runtime probe confirmed `GameManager`, `LevelSystem`, `UIManager`, and `UpgradeManager` are present and enabled.
+- Runtime probe confirmed `PlayerController`, `PlayerHealth`, `AutoWeapon`, `Rigidbody2D`, `CircleCollider2D`, and `SpriteRenderer` exist on `Player`.
+- Runtime probe confirmed `EnemySpawner` is enabled and configured with positive spawn interval, spawn distance, and max enemy values.
+- Runtime probe confirmed `Enemy`, `Projectile`, and `XPOrb` runtime types are available, covering the spawn, projectile, and XP paths.
+- Runtime probe confirmed UI objects exist for HP, level, XP, timer, hidden game-over panel, game-over text, and restart button.
+- Stopped Play Mode with `manage_editor --action stop`.
+- Re-ran `/Users/dongttak/go/bin/hera-agent-unity console --type error`: no errors were returned after validation.
+
+Validation result: pass. No gameplay files were modified during this validation pass.
