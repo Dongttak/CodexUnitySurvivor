@@ -97,6 +97,10 @@ public class LevelSystem : MonoBehaviour
 
         OnLevelChanged?.Invoke(currentLevel);
         OnXPChanged?.Invoke(currentXP, xpToNextLevel, currentLevel);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayLevelUp();
+        }
 
         if (GameManager.Instance != null)
         {

@@ -97,6 +97,10 @@ public class Enemy : MonoBehaviour
         currentHealth -= amount;
         hitFlashTimer = 0.08f;
         FeedbackEffect.SpawnPulse(transform.position, new Color(1f, 0.85f, 0.25f, 0.55f), 0.35f, 0.75f, 0.16f, 8);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayEnemyHit();
+        }
 
         if (currentHealth <= 0f)
         {
@@ -116,6 +120,11 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         FeedbackEffect.SpawnPulse(transform.position, new Color(1f, 0.2f, 0.12f, 0.85f), 0.45f, 1.45f, 0.28f, 8);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayEnemyDeath();
+        }
+
         XPOrb.Create(transform.position, xpValue);
         Destroy(gameObject);
     }

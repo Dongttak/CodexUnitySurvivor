@@ -35,8 +35,9 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Simple hit, death, projectile impact, and XP pickup pulse feedback.
   - Clearer level-up choice labels with short upgrade descriptions.
   - Gentler early spawn pacing for the first minute.
+- Procedural placeholder SFX for shooting, enemy hits/deaths, XP pickup, level-up, player damage, and game over.
 
-All visuals are generated placeholder sprites at runtime. No external art, paid assets, or extra packages were added.
+All visuals and sound effects are generated placeholders at runtime. No external art, audio, paid assets, or extra packages were added.
 
 ## Scene Setup
 

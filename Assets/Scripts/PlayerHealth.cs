@@ -63,6 +63,11 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = Mathf.Max(0f, currentHealth - amount);
         damageFlashTimer = 0.1f;
         FeedbackEffect.SpawnPulse(transform.position, new Color(1f, 0.15f, 0.15f, 0.55f), 0.45f, 1.25f, 0.22f, 10);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayPlayerDamage();
+        }
+
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (currentHealth <= 0f)

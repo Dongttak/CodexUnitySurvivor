@@ -82,6 +82,10 @@ public class XPOrb : MonoBehaviour
     private void Collect()
     {
         FeedbackEffect.SpawnPickup(transform.position);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayXpPickup();
+        }
 
         if (levelSystem != null)
         {

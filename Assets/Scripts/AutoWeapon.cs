@@ -73,5 +73,9 @@ public class AutoWeapon : MonoBehaviour
         Projectile projectile = projectileObject.AddComponent<Projectile>();
         projectile.Initialize(direction, damage, projectileSpeed);
         FeedbackEffect.SpawnPulse(transform.position + (Vector3)(direction * 0.35f), new Color(1f, 0.95f, 0.25f, 0.35f), 0.2f, 0.45f, 0.1f, 7);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayShoot();
+        }
     }
 }

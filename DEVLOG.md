@@ -78,6 +78,19 @@ Validation result: pass. Existing MVP loop remains intact with conservative read
 
 Known limitations to watch during manual playtest:
 - The game still uses runtime-generated placeholder visuals only.
-- There are no arena bounds, audio, enemy variants, weapon variants, boss encounters, save/load, or main menu.
+- There are no arena bounds, BGM, enemy variants, weapon variants, boss encounters, save/load, or main menu.
 - UI is built with legacy uGUI text at runtime; verify readability at the Game view sizes used for testing.
 - The Play Mode loop has been smoke-tested through Hera, but real-feel balance still needs human playtime.
+
+## 2026-06-16 - Procedural Placeholder SFX
+
+- Ran `git status --short` and confirmed branch `ai-polish-pass-01` before implementation.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `list`, `console --type error`, `scene --action info`, and scene inspection.
+- Added `AudioManager`, a scene-level singleton that creates short placeholder `AudioClip` tones at runtime without importing external audio files.
+- Added conservative volume controls and throttled enemy-hit playback so rapid projectile hits do not stack too harshly.
+- Hooked placeholder SFX into existing events: shooting, enemy hit, enemy death, XP pickup, level-up, player damage, and game over.
+- No BGM, external assets, new weapons, or new gameplay systems were added.
+- Attached `AudioManager` to the existing `GameManager` scene object and saved `SampleScene`.
+- Refreshed Unity, rechecked console errors, entered Play Mode, validated all seven procedural clips existed, invoked each SFX method once, stopped Play Mode, and rechecked console errors.
+
+Validation result: pass. Unity console returned no errors after procedural SFX validation.

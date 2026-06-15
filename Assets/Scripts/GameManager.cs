@@ -103,6 +103,10 @@ public class GameManager : MonoBehaviour
 
         IsGameOver = true;
         Time.timeScale = 0f;
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayGameOver();
+        }
 
         if (uiManager != null)
         {
