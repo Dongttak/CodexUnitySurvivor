@@ -13,6 +13,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float levelUpVolume = 0.42f;
     [SerializeField, Range(0f, 1f)] private float playerDamageVolume = 0.36f;
     [SerializeField, Range(0f, 1f)] private float gameOverVolume = 0.45f;
+    [SerializeField, Range(0f, 1f)] private float upgradeSelectedVolume = 0.34f;
     [SerializeField] private float hitSoundCooldown = 0.04f;
 
     private AudioSource audioSource;
@@ -23,6 +24,7 @@ public class AudioManager : MonoBehaviour
     private AudioClip levelUpClip;
     private AudioClip playerDamageClip;
     private AudioClip gameOverClip;
+    private AudioClip upgradeSelectedClip;
     private float nextHitSoundTime;
 
     private void Awake()
@@ -83,6 +85,11 @@ public class AudioManager : MonoBehaviour
         Play(gameOverClip, gameOverVolume, 1f);
     }
 
+    public void PlayUpgradeSelected()
+    {
+        Play(upgradeSelectedClip, upgradeSelectedVolume, 1f);
+    }
+
     private void BuildClips()
     {
         shootClip = CreateTone("SFX Shoot", 720f, 930f, 0.055f, WaveType.Square);
@@ -92,6 +99,7 @@ public class AudioManager : MonoBehaviour
         levelUpClip = CreateArpeggio("SFX Level Up", new[] { 520f, 660f, 880f }, 0.24f);
         playerDamageClip = CreateTone("SFX Player Damage", 150f, 90f, 0.14f, WaveType.Square);
         gameOverClip = CreateTone("SFX Game Over", 220f, 55f, 0.36f, WaveType.Sine);
+        upgradeSelectedClip = CreateTone("SFX Upgrade Selected", 680f, 1040f, 0.12f, WaveType.Sine);
     }
 
     private void Play(AudioClip clip, float volume, float pitch)

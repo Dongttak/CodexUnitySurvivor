@@ -9,6 +9,13 @@ public class XPOrb : MonoBehaviour
 
     private Transform player;
     private LevelSystem levelSystem;
+    private static float attractionRadiusBonus;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStaticState()
+    {
+        attractionRadiusBonus = 0f;
+    }
 
     private void Awake()
     {
@@ -56,10 +63,15 @@ public class XPOrb : MonoBehaviour
             return;
         }
 
-        if (distance <= attractRadius)
+        if (distance <= attractRadius + attractionRadiusBonus)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, moveSpeed * Time.deltaTime);
         }
+    }
+
+    public static void IncreaseAttractionRadius(float amount)
+    {
+        attractionRadiusBonus = Mathf.Max(0f, attractionRadiusBonus + amount);
     }
 
     public static XPOrb Create(Vector3 position, int xpValue)

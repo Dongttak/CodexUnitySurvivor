@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class UpgradeManager : MonoBehaviour
     private Button moveSpeedButton;
     private Text titleText;
     private LevelSystem activeLevelSystem;
+    private readonly List<LevelSystem.UpgradeChoice> activeChoices = new List<LevelSystem.UpgradeChoice>();
 
     private void Update()
     {
@@ -22,27 +24,29 @@ public class UpgradeManager : MonoBehaviour
 
         if (WasChoicePressed(1))
         {
-            Choose(activeLevelSystem, UpgradeType.ProjectileDamage);
+            Choose(0);
         }
         else if (WasChoicePressed(2))
         {
-            Choose(activeLevelSystem, UpgradeType.FireRate);
+            Choose(1);
         }
         else if (WasChoicePressed(3))
         {
-            Choose(activeLevelSystem, UpgradeType.MoveSpeed);
+            Choose(2);
         }
     }
 
-    public void ShowChoices(LevelSystem levelSystem)
+    public void ShowChoices(LevelSystem levelSystem, IReadOnlyList<LevelSystem.UpgradeChoice> choices)
     {
         EnsurePanel();
 
         activeLevelSystem = levelSystem;
+        activeChoices.Clear();
+        activeChoices.AddRange(choices);
         titleText.text = "Level Up - Choose 1 Upgrade";
-        ConfigureButton(damageButton, "1  Sharper Projectiles\nMore damage per hit", () => Choose(levelSystem, UpgradeType.ProjectileDamage));
-        ConfigureButton(fireRateButton, "2  Faster Casting\nShoot a little more often", () => Choose(levelSystem, UpgradeType.FireRate));
-        ConfigureButton(moveSpeedButton, "3  Quicker Footwork\nMove faster to escape crowds", () => Choose(levelSystem, UpgradeType.MoveSpeed));
+        ConfigureButton(damageButton, GetLabel(0), () => Choose(0));
+        ConfigureButton(fireRateButton, GetLabel(1), () => Choose(1));
+        ConfigureButton(moveSpeedButton, GetLabel(2), () => Choose(2));
         panel.SetActive(true);
     }
 
@@ -53,12 +57,31 @@ public class UpgradeManager : MonoBehaviour
             panel.SetActive(false);
         }
         activeLevelSystem = null;
+        activeChoices.Clear();
     }
 
-    private void Choose(LevelSystem levelSystem, UpgradeType upgradeType)
+    private void Choose(int choiceIndex)
     {
+        if (activeLevelSystem == null || choiceIndex < 0 || choiceIndex >= activeChoices.Count)
+        {
+            return;
+        }
+
+        UpgradeType upgradeType = activeChoices[choiceIndex].Type;
+        LevelSystem levelSystem = activeLevelSystem;
         HideChoices();
         levelSystem.ApplyUpgrade(upgradeType);
+    }
+
+    private string GetLabel(int choiceIndex)
+    {
+        if (choiceIndex < 0 || choiceIndex >= activeChoices.Count)
+        {
+            return string.Empty;
+        }
+
+        LevelSystem.UpgradeChoice choice = activeChoices[choiceIndex];
+        return $"{choiceIndex + 1}  {choice.Name}\n{choice.Description}";
     }
 
     private void EnsurePanel()

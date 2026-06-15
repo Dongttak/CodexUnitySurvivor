@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelSystem : MonoBehaviour
@@ -10,6 +11,11 @@ public class LevelSystem : MonoBehaviour
     [SerializeField] private float damageUpgradeAmount = 2f;
     [SerializeField] private float fireRateUpgradeAmount = 0.25f;
     [SerializeField] private float moveSpeedUpgradeAmount = 0.45f;
+    [SerializeField] private float maxHealthUpgradeAmount = 20f;
+    [SerializeField] private float healAmount = 30f;
+    [SerializeField] private float projectileSizeUpgradeAmount = 0.25f;
+    [SerializeField] private float xpMagnetUpgradeAmount = 1.25f;
+    [SerializeField] private int multiShotUpgradeAmount = 1;
 
     private PlayerController playerController;
     private AutoWeapon autoWeapon;
@@ -22,6 +28,20 @@ public class LevelSystem : MonoBehaviour
     public int CurrentLevel => currentLevel;
     public int CurrentXP => currentXP;
     public int XPToNextLevel => xpToNextLevel;
+
+    public readonly struct UpgradeChoice
+    {
+        public UpgradeChoice(UpgradeType type, string name, string description)
+        {
+            Type = type;
+            Name = name;
+            Description = description;
+        }
+
+        public UpgradeType Type { get; }
+        public string Name { get; }
+        public string Description { get; }
+    }
 
     private void Start()
     {
@@ -71,8 +91,42 @@ public class LevelSystem : MonoBehaviour
                     playerController.IncreaseMoveSpeed(moveSpeedUpgradeAmount);
                 }
                 break;
+            case UpgradeType.MaxHealth:
+                PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
+                if (playerHealth != null)
+                {
+                    playerHealth.IncreaseMaxHealth(maxHealthUpgradeAmount, maxHealthUpgradeAmount);
+                }
+                break;
+            case UpgradeType.Heal:
+                PlayerHealth healingTarget = FindFirstObjectByType<PlayerHealth>();
+                if (healingTarget != null)
+                {
+                    healingTarget.Heal(healAmount);
+                }
+                break;
+            case UpgradeType.ProjectileSize:
+                if (autoWeapon != null)
+                {
+                    autoWeapon.IncreaseProjectileSize(projectileSizeUpgradeAmount);
+                }
+                break;
+            case UpgradeType.XPMagnet:
+                XPOrb.IncreaseAttractionRadius(xpMagnetUpgradeAmount);
+                break;
+            case UpgradeType.MultiShot:
+                if (autoWeapon != null)
+                {
+                    autoWeapon.IncreaseProjectileCount(multiShotUpgradeAmount);
+                }
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(upgradeType), upgradeType, null);
+        }
+
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayUpgradeSelected();
         }
 
         choosingUpgrade = false;
@@ -109,7 +163,37 @@ public class LevelSystem : MonoBehaviour
 
         if (upgradeManager != null)
         {
-            upgradeManager.ShowChoices(this);
+            upgradeManager.ShowChoices(this, RollUpgradeChoices());
         }
+    }
+
+    private List<UpgradeChoice> RollUpgradeChoices()
+    {
+        List<UpgradeChoice> pool = BuildUpgradePool();
+        List<UpgradeChoice> choices = new List<UpgradeChoice>();
+
+        while (choices.Count < 3 && pool.Count > 0)
+        {
+            int index = UnityEngine.Random.Range(0, pool.Count);
+            choices.Add(pool[index]);
+            pool.RemoveAt(index);
+        }
+
+        return choices;
+    }
+
+    private static List<UpgradeChoice> BuildUpgradePool()
+    {
+        return new List<UpgradeChoice>
+        {
+            new UpgradeChoice(UpgradeType.ProjectileDamage, "Sharper Projectiles", "More damage per hit"),
+            new UpgradeChoice(UpgradeType.FireRate, "Faster Casting", "Shoot a little more often"),
+            new UpgradeChoice(UpgradeType.MoveSpeed, "Quicker Footwork", "Move faster to escape crowds"),
+            new UpgradeChoice(UpgradeType.MaxHealth, "Max HP Up", "Raise max HP and heal by the same amount"),
+            new UpgradeChoice(UpgradeType.Heal, "Patch Up", "Instantly restore some HP"),
+            new UpgradeChoice(UpgradeType.ProjectileSize, "Bigger Shots", "Larger projectiles with wider collision"),
+            new UpgradeChoice(UpgradeType.XPMagnet, "XP Magnet", "Pull XP orbs from farther away"),
+            new UpgradeChoice(UpgradeType.MultiShot, "Multi Shot", "Fire one additional projectile per attack")
+        };
     }
 }

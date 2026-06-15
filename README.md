@@ -27,6 +27,12 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Projectile damage
   - Fire rate
   - Movement speed
+  - Max HP
+  - Heal
+  - Projectile size
+  - XP magnet
+  - Multi shot
+- Level-up presents 3 random non-duplicate upgrade choices from the available pool.
 - Enemy spawn interval ramps down over time.
 - Runtime HUD for HP, level, XP, and survival time.
 - Game over screen with restart.
@@ -36,6 +42,7 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Clearer level-up choice labels with short upgrade descriptions.
   - Gentler early spawn pacing for the first minute.
 - Procedural placeholder SFX for shooting, enemy hits/deaths, XP pickup, level-up, player damage, and game over.
+- Procedural placeholder SFX also play when an upgrade is selected.
 
 All visuals and sound effects are generated placeholders at runtime. No external art, audio, paid assets, or extra packages were added.
 

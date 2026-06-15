@@ -94,3 +94,19 @@ Known limitations to watch during manual playtest:
 - Refreshed Unity, rechecked console errors, entered Play Mode, validated all seven procedural clips existed, invoked each SFX method once, stopped Play Mode, and rechecked console errors.
 
 Validation result: pass. Unity console returned no errors after procedural SFX validation.
+
+## 2026-06-16 - Upgrade Variety Pass 01
+
+- Created and switched to branch `ai-upgrade-pass-01`.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `list`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`.
+- Confirmed `SampleScene` was loaded, not dirty, and still contained `GameManager`, `Player`, `EnemySpawner`, `Main Camera`, `Canvas`, `EventSystem`, and `Global Light 2D`.
+- Expanded `UpgradeType` from 3 options to 8 total options: damage, fire rate, move speed, max HP, heal, projectile size, XP magnet, and multi shot.
+- Updated `LevelSystem` to build an upgrade pool and roll 3 random non-duplicate choices for each level-up.
+- Updated `UpgradeManager` so UI buttons and number keys apply the rolled choices instead of hardcoded fixed upgrades.
+- Added player max HP/heal support, projectile size/collision scaling, XP magnet attraction radius scaling, and additional projectile count support.
+- Added an upgrade-selected procedural SFX hook through the existing `AudioManager`.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors.
+- Entered Play Mode with Hera and validated that the pool contains all 8 upgrades, rolled choices are 3 unique options, all upgrades apply without runtime errors, and `AudioManager` remains present.
+- Stopped Play Mode with Hera and rechecked the Unity console; no errors were returned.
+
+Validation result: pass. Existing MVP loop, procedural SFX, and original upgrades remain intact while the level-up pool now offers more variety.

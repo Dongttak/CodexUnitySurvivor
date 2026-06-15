@@ -14,7 +14,7 @@
 - [ ] Start Play Mode from `SampleScene` without console errors.
 - [ ] Survive for at least 60 seconds.
 - [ ] Reach at least level 2.
-- [ ] Select each upgrade type across separate level-ups or separate runs.
+- [ ] Select several upgrade types across separate level-ups or separate runs.
 - [ ] Confirm enemies spawn, chase, take damage, die, and drop XP.
 - [ ] Confirm HP, level, XP, and timer update while playing.
 - [ ] Let the player die and confirm game over appears.
@@ -62,14 +62,21 @@
 
 - [ ] Level-up panel title is readable.
 - [ ] All three upgrade buttons fit inside the panel.
-- [ ] `1` selects Sharper Projectiles.
-- [ ] `2` selects Faster Casting.
-- [ ] `3` selects Quicker Footwork.
+- [ ] The three choices vary between level-ups and do not duplicate within the same panel.
+- [ ] `1` selects the first displayed upgrade.
+- [ ] `2` selects the second displayed upgrade.
+- [ ] `3` selects the third displayed upgrade.
 - [ ] Mouse clicks also select upgrades.
 - [ ] Gameplay resumes after selecting an upgrade.
 - [ ] Damage upgrade makes enemies die faster in later fights.
 - [ ] Fire rate upgrade makes shots happen more often.
 - [ ] Move speed upgrade feels noticeable but not uncontrollable.
+- [ ] Max HP Up increases max HP and also heals.
+- [ ] Heal restores HP without changing max HP.
+- [ ] Projectile Size Up makes projectiles visibly larger and easier to hit with.
+- [ ] XP Magnet pulls XP orbs from farther away.
+- [ ] Multi Shot adds one projectile per attack.
+- [ ] Upgrade selection plays a short procedural SFX.
 
 ## Game Over And Restart Checks
 
@@ -110,6 +117,9 @@
 - Note whether projectile damage feels too weak or too strong.
 - Note whether the spawn ramp feels fair at 1, 3, and 5 minutes.
 - Note whether movement speed upgrades become too fast after repeated picks.
+- Note whether projectile size or multi shot becomes visually cluttered.
+- Note whether XP Magnet makes collection too automatic too quickly.
+- Note whether HP upgrades and heal upgrades both feel worth choosing.
 - Note if one upgrade is always obviously better than the others.
 
 ## Bugs To Watch For
@@ -122,6 +132,8 @@
 - XP orbs failing to collect.
 - Level-up panel not pausing gameplay.
 - Upgrade buttons or number keys not responding.
+- Duplicate upgrade choices appearing in a single level-up panel.
+- New upgrades appearing in UI but not changing gameplay.
 - Game over panel not appearing.
 - Restart leaving old runtime objects in the scene.
 - UI text missing because runtime UI construction failed.
@@ -134,5 +146,5 @@
 - Add a simple arena boundary if players can kite forever.
 - Add one additional enemy type after the current enemy pacing feels stable.
 - Add lightweight automated Play Mode tests for XP, level-up, and restart.
-- Add audio only after the silent placeholder loop feels correct.
+- Add BGM only after procedural SFX and core pacing feel correct.
 - Consider simple health bar or damage numbers only if combat readability still feels weak.

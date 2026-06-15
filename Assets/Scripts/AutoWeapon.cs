@@ -6,6 +6,9 @@ public class AutoWeapon : MonoBehaviour
     [SerializeField] private float damage = 7f;
     [SerializeField] private float fireRate = 1.15f;
     [SerializeField] private float projectileSpeed = 11f;
+    [SerializeField] private float projectileSize = 1f;
+    [SerializeField] private int projectileCount = 1;
+    [SerializeField] private float multiShotSpreadDegrees = 14f;
 
     private float fireTimer;
 
@@ -45,6 +48,16 @@ public class AutoWeapon : MonoBehaviour
         fireRate += amount;
     }
 
+    public void IncreaseProjectileSize(float amount)
+    {
+        projectileSize = Mathf.Max(0.5f, projectileSize + amount);
+    }
+
+    public void IncreaseProjectileCount(int amount)
+    {
+        projectileCount = Mathf.Max(1, projectileCount + amount);
+    }
+
     private Enemy FindNearestEnemy()
     {
         Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
@@ -68,14 +81,28 @@ public class AutoWeapon : MonoBehaviour
     private void FireAt(Vector3 targetPosition)
     {
         Vector2 direction = (targetPosition - transform.position).normalized;
-        GameObject projectileObject = new GameObject("Projectile");
-        projectileObject.transform.position = transform.position;
-        Projectile projectile = projectileObject.AddComponent<Projectile>();
-        projectile.Initialize(direction, damage, projectileSpeed);
+        int shots = Mathf.Max(1, projectileCount);
+        float startAngle = shots > 1 ? -multiShotSpreadDegrees * (shots - 1) * 0.5f : 0f;
+
+        for (int i = 0; i < shots; i++)
+        {
+            float angle = startAngle + multiShotSpreadDegrees * i;
+            Vector2 shotDirection = Quaternion.Euler(0f, 0f, angle) * direction;
+            SpawnProjectile(shotDirection);
+        }
+
         FeedbackEffect.SpawnPulse(transform.position + (Vector3)(direction * 0.35f), new Color(1f, 0.95f, 0.25f, 0.35f), 0.2f, 0.45f, 0.1f, 7);
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayShoot();
         }
+    }
+
+    private void SpawnProjectile(Vector2 direction)
+    {
+        GameObject projectileObject = new GameObject("Projectile");
+        projectileObject.transform.position = transform.position;
+        Projectile projectile = projectileObject.AddComponent<Projectile>();
+        projectile.Initialize(direction, damage, projectileSpeed, projectileSize);
     }
 }

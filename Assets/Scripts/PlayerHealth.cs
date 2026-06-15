@@ -75,4 +75,26 @@ public class PlayerHealth : MonoBehaviour
             OnDied?.Invoke();
         }
     }
+
+    public void IncreaseMaxHealth(float amount, float healAmount)
+    {
+        if (amount <= 0f)
+        {
+            return;
+        }
+
+        maxHealth += amount;
+        Heal(healAmount);
+    }
+
+    public void Heal(float amount)
+    {
+        if (amount <= 0f || currentHealth <= 0f)
+        {
+            return;
+        }
+
+        currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+    }
 }
