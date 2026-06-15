@@ -16,7 +16,7 @@ public class Projectile : MonoBehaviour
             collider2d = gameObject.AddComponent<CircleCollider2D>();
         }
         collider2d.isTrigger = true;
-        collider2d.radius = 0.14f;
+        collider2d.radius = 0.18f;
 
         Rigidbody2D body = GetComponent<Rigidbody2D>();
         if (body == null)
@@ -32,9 +32,9 @@ public class Projectile : MonoBehaviour
             spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         }
         spriteRenderer.sprite = PlaceholderSprites.Circle;
-        spriteRenderer.color = new Color(1f, 0.95f, 0.25f);
+        spriteRenderer.color = new Color(1f, 0.92f, 0.18f);
         spriteRenderer.sortingOrder = 6;
-        transform.localScale = Vector3.one * 0.35f;
+        transform.localScale = Vector3.one * 0.42f;
     }
 
     private void Update()
@@ -64,6 +64,7 @@ public class Projectile : MonoBehaviour
         }
 
         enemy.TakeDamage(damage);
+        FeedbackEffect.SpawnPulse(transform.position, new Color(1f, 0.95f, 0.25f, 0.6f), 0.2f, 0.55f, 0.12f, 8);
         Destroy(gameObject);
     }
 }

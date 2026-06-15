@@ -133,7 +133,7 @@ public class UIManager : MonoBehaviour
 
         int minutes = Mathf.FloorToInt(seconds / 60f);
         int remainder = Mathf.FloorToInt(seconds % 60f);
-        gameOverText.text = $"Game Over\nSurvived {minutes:00}:{remainder:00}\nPress Restart";
+        gameOverText.text = $"Game Over\nSurvived {minutes:00}:{remainder:00}\nPress R or Restart";
         gameOverPanel.SetActive(true);
     }
 
@@ -163,10 +163,10 @@ public class UIManager : MonoBehaviour
         rect.offsetMin = Vector2.zero;
         rect.offsetMax = Vector2.zero;
 
-        hpText = CreateHudText(hud.transform, "HP Text", "HP 100 / 100", new Vector2(24f, -24f));
-        levelText = CreateHudText(hud.transform, "Level Text", "Level 1", new Vector2(24f, -62f));
-        xpText = CreateHudText(hud.transform, "XP Text", "XP 0 / 5", new Vector2(24f, -100f));
-        timeText = CreateHudText(hud.transform, "Time Text", "Time 00:00", new Vector2(-24f, -24f));
+        hpText = CreateHudText(hud.transform, "HP Text", "HP 100 / 100", new Vector2(28f, -28f));
+        levelText = CreateHudText(hud.transform, "Level Text", "Level 1", new Vector2(28f, -68f));
+        xpText = CreateHudText(hud.transform, "XP Text", "XP 0 / 4", new Vector2(28f, -108f));
+        timeText = CreateHudText(hud.transform, "Time Text", "Time 00:00", new Vector2(-28f, -28f));
         timeText.alignment = TextAnchor.UpperRight;
         timeText.rectTransform.anchorMin = new Vector2(1f, 1f);
         timeText.rectTransform.anchorMax = new Vector2(1f, 1f);

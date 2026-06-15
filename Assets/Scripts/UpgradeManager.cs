@@ -39,10 +39,10 @@ public class UpgradeManager : MonoBehaviour
         EnsurePanel();
 
         activeLevelSystem = levelSystem;
-        titleText.text = "Level Up";
-        ConfigureButton(damageButton, "1  Projectile Damage", () => Choose(levelSystem, UpgradeType.ProjectileDamage));
-        ConfigureButton(fireRateButton, "2  Fire Rate", () => Choose(levelSystem, UpgradeType.FireRate));
-        ConfigureButton(moveSpeedButton, "3  Move Speed", () => Choose(levelSystem, UpgradeType.MoveSpeed));
+        titleText.text = "Level Up - Choose 1 Upgrade";
+        ConfigureButton(damageButton, "1  Sharper Projectiles\nMore damage per hit", () => Choose(levelSystem, UpgradeType.ProjectileDamage));
+        ConfigureButton(fireRateButton, "2  Faster Casting\nShoot a little more often", () => Choose(levelSystem, UpgradeType.FireRate));
+        ConfigureButton(moveSpeedButton, "3  Quicker Footwork\nMove faster to escape crowds", () => Choose(levelSystem, UpgradeType.MoveSpeed));
         panel.SetActive(true);
     }
 
@@ -76,18 +76,18 @@ public class UpgradeManager : MonoBehaviour
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(430f, 300f);
+        rect.sizeDelta = new Vector2(500f, 340f);
         rect.anchoredPosition = Vector2.zero;
 
         Image background = panel.AddComponent<Image>();
         background.color = new Color(0.05f, 0.06f, 0.08f, 0.94f);
 
         titleText = UIManager.CreateText(panel.transform, "Title", "Level Up", 32, TextAnchor.MiddleCenter);
-        SetRect(titleText.rectTransform, new Vector2(0f, 102f), new Vector2(380f, 48f));
+        SetRect(titleText.rectTransform, new Vector2(0f, 122f), new Vector2(450f, 48f));
 
-        damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 34f));
+        damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 48f));
         fireRateButton = CreateChoiceButton("Fire Rate Button", new Vector2(0f, -36f));
-        moveSpeedButton = CreateChoiceButton("Move Speed Button", new Vector2(0f, -106f));
+        moveSpeedButton = CreateChoiceButton("Move Speed Button", new Vector2(0f, -120f));
 
         panel.SetActive(false);
     }
@@ -98,7 +98,7 @@ public class UpgradeManager : MonoBehaviour
         buttonObject.transform.SetParent(panel.transform, false);
 
         RectTransform rect = buttonObject.AddComponent<RectTransform>();
-        SetRect(rect, position, new Vector2(340f, 52f));
+        SetRect(rect, position, new Vector2(400f, 64f));
 
         Image image = buttonObject.AddComponent<Image>();
         image.color = new Color(0.18f, 0.32f, 0.42f);
@@ -106,7 +106,7 @@ public class UpgradeManager : MonoBehaviour
         Button button = buttonObject.AddComponent<Button>();
         button.targetGraphic = image;
 
-        Text label = UIManager.CreateText(buttonObject.transform, "Label", "", 20, TextAnchor.MiddleCenter);
+        Text label = UIManager.CreateText(buttonObject.transform, "Label", "", 18, TextAnchor.MiddleCenter);
         label.color = Color.white;
         RectTransform labelRect = label.rectTransform;
         labelRect.anchorMin = Vector2.zero;

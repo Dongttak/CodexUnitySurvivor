@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 5.2f;
 
     private Rigidbody2D body;
     private Vector2 movementInput;
@@ -33,8 +33,9 @@ public class PlayerController : MonoBehaviour
             spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         }
         spriteRenderer.sprite = PlaceholderSprites.Circle;
-        spriteRenderer.color = new Color(0.25f, 0.75f, 1f);
+        spriteRenderer.color = new Color(0.18f, 0.78f, 1f);
         spriteRenderer.sortingOrder = 5;
+        transform.localScale = Vector3.one * 1.05f;
     }
 
     private void Update()

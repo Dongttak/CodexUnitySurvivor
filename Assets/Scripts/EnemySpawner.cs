@@ -3,11 +3,11 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] private Transform player;
-    [SerializeField] private float initialSpawnInterval = 1.5f;
-    [SerializeField] private float minimumSpawnInterval = 0.25f;
-    [SerializeField] private float intervalReductionPerSecond = 0.015f;
-    [SerializeField] private float spawnDistance = 10f;
-    [SerializeField] private int maxActiveEnemies = 120;
+    [SerializeField] private float initialSpawnInterval = 2.1f;
+    [SerializeField] private float minimumSpawnInterval = 0.45f;
+    [SerializeField] private float intervalReductionPerSecond = 0.01f;
+    [SerializeField] private float spawnDistance = 11f;
+    [SerializeField] private int maxActiveEnemies = 90;
 
     private float elapsedTime;
     private float spawnTimer;
@@ -23,7 +23,7 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        spawnTimer = 0.5f;
+        spawnTimer = 1f;
     }
 
     private void Update()

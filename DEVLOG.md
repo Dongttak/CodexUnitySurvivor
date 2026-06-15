@@ -49,3 +49,19 @@ Current state: playable placeholder MVP implemented. Unity console has no report
 - Re-ran `/Users/dongttak/go/bin/hera-agent-unity console --type error`: no errors were returned after validation.
 
 Validation result: pass. No gameplay files were modified during this validation pass.
+
+## 2026-06-16 - Conservative Polish Pass 01
+
+- Created and switched to branch `ai-polish-pass-01`.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `list`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`.
+- Confirmed `SampleScene` was loaded, not dirty, and still contained `GameManager`, `Player`, `EnemySpawner`, `Main Camera`, `Canvas`, `EventSystem`, and `Global Light 2D`.
+- Improved placeholder readability with adjusted player, enemy, projectile, and XP colors/scales.
+- Added a small `FeedbackEffect` helper for runtime-only pulse feedback on enemy hits, enemy death, projectile impacts, player damage, and XP pickup.
+- Clarified level-up UI copy with short descriptions for the three existing upgrades.
+- Tuned early balance conservatively: slower initial enemy spawn interval, higher minimum spawn interval, lower ramp speed, slightly larger spawn distance, lower max active enemy count, slightly higher player HP, brighter/faster projectiles, and first level at 4 XP.
+- Applied the tuned values to existing serialized scene components through Hera and saved `SampleScene`.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors.
+- Entered Play Mode with Hera, validated tuned runtime values, confirmed the enemy spawn path still creates an enemy, and verified core HUD objects exist.
+- Stopped Play Mode with Hera and re-checked the Unity console; no errors were returned.
+
+Validation result: pass. Existing MVP loop remains intact with conservative readability, feedback, UI, and early pacing improvements.

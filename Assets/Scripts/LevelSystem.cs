@@ -5,10 +5,10 @@ public class LevelSystem : MonoBehaviour
 {
     [SerializeField] private int currentLevel = 1;
     [SerializeField] private int currentXP;
-    [SerializeField] private int xpToNextLevel = 5;
+    [SerializeField] private int xpToNextLevel = 4;
     [SerializeField] private float xpRequirementMultiplier = 1.35f;
     [SerializeField] private float damageUpgradeAmount = 2f;
-    [SerializeField] private float fireRateUpgradeAmount = 0.35f;
+    [SerializeField] private float fireRateUpgradeAmount = 0.25f;
     [SerializeField] private float moveSpeedUpgradeAmount = 0.45f;
 
     private PlayerController playerController;

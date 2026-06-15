@@ -30,6 +30,11 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
 - Enemy spawn interval ramps down over time.
 - Runtime HUD for HP, level, XP, and survival time.
 - Game over screen with restart.
+- Conservative polish pass:
+  - Clearer placeholder colors and sizing for player, enemies, projectiles, and XP.
+  - Simple hit, death, projectile impact, and XP pickup pulse feedback.
+  - Clearer level-up choice labels with short upgrade descriptions.
+  - Gentler early spawn pacing for the first minute.
 
 All visuals are generated placeholder sprites at runtime. No external art, paid assets, or extra packages were added.
 

@@ -3,7 +3,7 @@ using UnityEngine;
 public class XPOrb : MonoBehaviour
 {
     [SerializeField] private int value = 1;
-    [SerializeField] private float attractRadius = 3f;
+    [SerializeField] private float attractRadius = 3.4f;
     [SerializeField] private float collectRadius = 0.35f;
     [SerializeField] private float moveSpeed = 6f;
 
@@ -26,9 +26,9 @@ public class XPOrb : MonoBehaviour
             spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
         }
         spriteRenderer.sprite = PlaceholderSprites.Circle;
-        spriteRenderer.color = new Color(0.35f, 1f, 0.4f);
+        spriteRenderer.color = new Color(0.25f, 1f, 0.55f);
         spriteRenderer.sortingOrder = 3;
-        transform.localScale = Vector3.one * 0.45f;
+        transform.localScale = Vector3.one * 0.52f;
     }
 
     private void Start()
@@ -81,6 +81,8 @@ public class XPOrb : MonoBehaviour
 
     private void Collect()
     {
+        FeedbackEffect.SpawnPickup(transform.position);
+
         if (levelSystem != null)
         {
             levelSystem.AddXP(value);

@@ -191,7 +191,7 @@ SpriteRenderer:
   m_SortingOrder: 5
   m_MaskInteraction: 0
   m_Sprite: {fileID: 0}
-  m_Color: {r: 0.25, g: 0.75, b: 1, a: 1}
+  m_Color: {r: 0.18, g: 0.78, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -249,9 +249,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoWeapon
   range: 8
-  damage: 6
-  fireRate: 1.2
-  projectileSpeed: 9
+  damage: 7
+  fireRate: 1.15
+  projectileSpeed: 11
 --- !u!114 &241811769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe4403215265e41dcb1b3ae862233796, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 100
+  maxHealth: 110
   contactDamageCooldown: 0.35
 --- !u!114 &241811770
 MonoBehaviour:
@@ -278,7 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c9913f0629744f49592d2c585305c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 5
+  moveSpeed: 5.2
 --- !u!50 &241811771
 Rigidbody2D:
   serializedVersion: 5
@@ -316,7 +316,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.05, y: 1.05, z: 1.05}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -403,7 +403,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.07, g: 0.08, b: 0.1, a: 1}
+  m_BackGroundColor: {r: 0.055, g: 0.065, b: 0.08, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -428,7 +428,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7.5
+  orthographic size: 7.75
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -768,11 +768,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   player: {fileID: 0}
-  initialSpawnInterval: 1.5
-  minimumSpawnInterval: 0.25
-  intervalReductionPerSecond: 0.015
-  spawnDistance: 10
-  maxActiveEnemies: 120
+  initialSpawnInterval: 2.1
+  minimumSpawnInterval: 0.45
+  intervalReductionPerSecond: 0.01
+  spawnDistance: 11
+  maxActiveEnemies: 90
 --- !u!4 &995005271
 Transform:
   m_ObjectHideFlags: 0
@@ -846,10 +846,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSystem
   currentLevel: 1
   currentXP: 0
-  xpToNextLevel: 5
+  xpToNextLevel: 4
   xpRequirementMultiplier: 1.35
   damageUpgradeAmount: 2
-  fireRateUpgradeAmount: 0.35
+  fireRateUpgradeAmount: 0.25
   moveSpeedUpgradeAmount: 0.45
 --- !u!114 &1094243577
 MonoBehaviour:

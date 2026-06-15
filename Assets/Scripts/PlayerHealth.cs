@@ -8,6 +8,9 @@ public class PlayerHealth : MonoBehaviour
 
     private float currentHealth;
     private float nextDamageTime;
+    private SpriteRenderer spriteRenderer;
+    private Color baseColor;
+    private float damageFlashTimer;
 
     public event Action<float, float> OnHealthChanged;
     public event Action OnDied;
@@ -18,11 +21,35 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         currentHealth = maxHealth;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
     {
+        if (spriteRenderer != null)
+        {
+            baseColor = spriteRenderer.color;
+        }
+
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
+    }
+
+    private void Update()
+    {
+        if (spriteRenderer == null)
+        {
+            return;
+        }
+
+        if (damageFlashTimer > 0f)
+        {
+            damageFlashTimer -= Time.deltaTime;
+            spriteRenderer.color = new Color(1f, 0.95f, 0.95f);
+        }
+        else
+        {
+            spriteRenderer.color = baseColor;
+        }
     }
 
     public void TakeDamage(float amount)
@@ -34,6 +61,8 @@ public class PlayerHealth : MonoBehaviour
 
         nextDamageTime = Time.time + contactDamageCooldown;
         currentHealth = Mathf.Max(0f, currentHealth - amount);
+        damageFlashTimer = 0.1f;
+        FeedbackEffect.SpawnPulse(transform.position, new Color(1f, 0.15f, 0.15f, 0.55f), 0.45f, 1.25f, 0.22f, 10);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
         if (currentHealth <= 0f)
