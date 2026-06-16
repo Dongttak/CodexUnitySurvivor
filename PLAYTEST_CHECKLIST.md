@@ -39,6 +39,9 @@
 - [ ] Projectiles travel fast enough to read as intentional shots.
 - [ ] Projectiles hit enemies and disappear on impact.
 - [ ] Floating damage numbers appear near enemies when projectiles hit.
+- [ ] Damage numbers are large enough to read at `1920x1080`.
+- [ ] Damage numbers are still readable at `1280x720`.
+- [ ] Damage numbers have enough contrast against enemies and the background.
 - [ ] Enemy HP bars are hidden on full-health enemies, then appear and shrink after damage.
 - [ ] Damage numbers fade quickly enough that repeated hits do not cover the player.
 - [ ] Enemies flash or pulse when hit.
@@ -104,6 +107,10 @@
 - [ ] Restart button on the pause panel reloads the run.
 - [ ] Pause panel title `Paused` is large and readable.
 - [ ] Pause panel instruction says `Press Esc or P to resume`.
+- [ ] Pause panel shows a readable `Current Stats` section.
+- [ ] Pause stats include HP, level, XP, damage, fire rate, move speed, projectile size, multi-shot count, XP magnet range, survival time, and active enemies.
+- [ ] Pause stats update after taking damage or collecting XP.
+- [ ] Pause stats reflect upgrades after choosing damage, fire rate, move speed, projectile size, multi shot, XP magnet, max HP, or heal.
 - [ ] Pause panel does not appear on top of the level-up panel.
 - [ ] Pause input does not resume gameplay after game over.
 
@@ -140,6 +147,7 @@
 - [ ] Upgrade cards remain readable at common Game view sizes.
 - [ ] Game over text and restart instruction are readable.
 - [ ] Pause panel text and buttons are readable.
+- [ ] Pause stats rows are readable and do not overflow the stats panel.
 - [ ] UI remains usable at common Game view sizes.
 
 ## Game Feel Checks
@@ -150,6 +158,7 @@
 - [ ] Hit and death pulses help clarify combat results.
 - [ ] XP pickup feels clear and rewarding.
 - [ ] Damage numbers are readable but do not clutter the screen heavily.
+- [ ] Damage number shadow improves readability without looking too heavy.
 - [ ] Enemy HP bars help show durability only after enemies have been damaged.
 - [ ] Early game has enough breathing room to learn movement.
 - [ ] The first level-up happens soon enough to demonstrate the core loop.
@@ -164,6 +173,8 @@
 - Note whether movement speed upgrades become too fast after repeated picks.
 - Note whether projectile size or multi shot becomes visually cluttered.
 - Note whether damage numbers or HP bars become visually noisy with many enemies.
+- Note whether damage numbers are now large enough during real combat.
+- Note whether pause-menu stats are useful or should later become a toggleable HUD panel.
 - Note whether the HUD panels are too large or too transparent at your preferred Game view size.
 - Note whether the start hint duration feels too short or too long.
 - Note whether upgrade card descriptions are clear enough to choose quickly.
@@ -197,6 +208,9 @@
 - Pooled projectiles reusing stale size, direction, or damage.
 - Pooled XP orbs reusing stale XP values or failing to attract.
 - Pooled damage numbers reusing stale text, alpha, or position.
+- Pooled damage numbers reusing stale scale, font size, or shadow color.
+- Pause stats showing stale values after upgrades or damage.
+- Pause stats layout clipping at `1280x720`.
 - Enemy HP bars failing to reset when pooled enemies are reused.
 - UI text missing because runtime UI construction failed.
 - HUD bars not filling or resetting correctly.

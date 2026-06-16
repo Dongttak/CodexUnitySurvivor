@@ -15,6 +15,10 @@ public class XPOrb : MonoBehaviour
     private static float attractionRadiusBonus;
     private bool active;
 
+    public static float BaseAttractionRadius => 3.4f;
+    public static float AttractionRadiusBonus => attractionRadiusBonus;
+    public static float CurrentAttractionRadius => BaseAttractionRadius + attractionRadiusBonus;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStaticState()
     {

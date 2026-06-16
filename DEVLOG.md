@@ -170,3 +170,22 @@ Known limitations:
 Known limitations:
 - UI is still placeholder uGUI assembled at runtime, so manual visual review at `1920x1080` and `1280x720` is still recommended.
 - Pause does not add a full settings menu, quit button, audio sliders, or remapping; it is intentionally limited to resume/restart.
+
+## 2026-06-16 - Stats Display And Damage Readability Pass 01
+
+- Created and switched to branch `ai-uiux-stats-damage-pass-01` from `ai-uiux-fix-pause-pass-01`.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`; Unity was connected, `SampleScene` was clean, and console errors were empty.
+- Reviewed `DamageNumber`, `UIManager`, `AutoWeapon`, `PlayerController`, `PlayerHealth`, `LevelSystem`, `UpgradeManager`, `XPOrb`, `GameManager`, and `EnemySpawner` before editing.
+- Addressed manual playtest feedback that floating damage numbers were still too small and hard to read.
+- Increased damage number readability: `TextMesh.fontSize` from `28` to `52`, `characterSize` from `0.052` to `0.085`, lifetime from `0.45` to `0.85`, and added a pooled black shadow text child behind the yellow damage text.
+- Kept the existing `DamageNumber` pool and reset text, font size, color/alpha, position, lifetime, and scale when reused.
+- Added simple read-only stat accessors for `AutoWeapon` projectile size, projectile count, and fire interval, plus static XP magnet radius accessors on `XPOrb`.
+- Added a pause-menu stats section showing HP, level, XP, damage, fire rate/interval, move speed, projectile size, multi-shot count, XP magnet range, survival time, and active enemies.
+- Chose pause-menu stats only rather than a `Tab` runtime overlay to keep the combat playfield uncluttered and avoid new input-state complexity.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors.
+- Entered Play Mode through Hera and validated larger pooled damage numbers, the shadow object, pause stats visibility, stat text content, pause behavior, level-up pause behavior, and game-over behavior.
+- Stopped Play Mode through Hera and rechecked the Unity console; no errors were returned.
+
+Known limitations:
+- Stats are visible in the pause menu only; no live `Tab` overlay was added in this pass.
+- Active enemy count is gathered only while the pause stats panel is visible, so it is acceptable for the MVP but not a full combat telemetry system.

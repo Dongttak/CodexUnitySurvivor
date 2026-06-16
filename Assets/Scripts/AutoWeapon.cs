@@ -14,6 +14,9 @@ public class AutoWeapon : MonoBehaviour
 
     public float Damage => damage;
     public float FireRate => fireRate;
+    public float FireInterval => 1f / Mathf.Max(0.1f, fireRate);
+    public float ProjectileSize => projectileSize;
+    public int ProjectileCount => projectileCount;
 
     private void Update()
     {

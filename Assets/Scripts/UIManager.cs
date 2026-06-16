@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     private const int MenuButtonFontSize = 30;
     private const int PauseTitleFontSize = 54;
     private const int PauseDetailsFontSize = 28;
+    private const int StatsTitleFontSize = 34;
+    private const int StatsRowFontSize = 25;
 
     private Text hpText;
     private Text levelText;
@@ -30,6 +32,7 @@ public class UIManager : MonoBehaviour
     private GameObject pausePanel;
     private Text pauseTitleText;
     private Text pauseDetailsText;
+    private Text statsText;
     private Text startHintText;
     private CanvasGroup startHintGroup;
     private float startHintTimer;
@@ -47,6 +50,10 @@ public class UIManager : MonoBehaviour
     {
         if (startHintGroup == null || !startHintGroup.gameObject.activeSelf)
         {
+            if (pausePanel != null && pausePanel.activeSelf)
+            {
+                UpdateStatsText();
+            }
             return;
         }
 
@@ -61,6 +68,11 @@ public class UIManager : MonoBehaviour
         if (startHintTimer > fadeStart)
         {
             startHintGroup.alpha = Mathf.InverseLerp(StartHintLifetime, fadeStart, startHintTimer);
+        }
+
+        if (pausePanel != null && pausePanel.activeSelf)
+        {
+            UpdateStatsText();
         }
     }
 
@@ -217,6 +229,7 @@ public class UIManager : MonoBehaviour
     {
         if (pausePanel != null)
         {
+            UpdateStatsText();
             pausePanel.SetActive(true);
         }
     }
@@ -319,7 +332,7 @@ public class UIManager : MonoBehaviour
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(620f, 380f);
+        rect.sizeDelta = new Vector2(920f, 640f);
         rect.anchoredPosition = Vector2.zero;
 
         Image image = EnsureImage(pausePanel);
@@ -341,7 +354,24 @@ public class UIManager : MonoBehaviour
         detailsRect.anchoredPosition = new Vector2(0f, -112f);
         detailsRect.sizeDelta = new Vector2(-80f, 46f);
 
-        Button resumeButton = CreateMenuButton(pausePanel.transform, "Resume Button", "Resume", new Vector2(0f, 122f));
+        GameObject statsPanel = EnsurePanel(pausePanel.transform, "Stats Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -34f), new Vector2(780f, 330f), new Color(0f, 0f, 0f, 0.36f));
+        Text statsTitle = GetOrCreateText(statsPanel.transform, "Stats Title", "Current Stats", StatsTitleFontSize, TextAnchor.UpperCenter);
+        RectTransform statsTitleRect = statsTitle.rectTransform;
+        statsTitleRect.anchorMin = new Vector2(0f, 1f);
+        statsTitleRect.anchorMax = new Vector2(1f, 1f);
+        statsTitleRect.pivot = new Vector2(0.5f, 1f);
+        statsTitleRect.anchoredPosition = new Vector2(0f, -14f);
+        statsTitleRect.sizeDelta = new Vector2(-32f, 44f);
+
+        statsText = GetOrCreateText(statsPanel.transform, "Stats Text", "", StatsRowFontSize, TextAnchor.UpperLeft);
+        RectTransform statsRect = statsText.rectTransform;
+        statsRect.anchorMin = Vector2.zero;
+        statsRect.anchorMax = Vector2.one;
+        statsRect.offsetMin = new Vector2(30f, 24f);
+        statsRect.offsetMax = new Vector2(-30f, -68f);
+        statsText.color = new Color(0.9f, 0.96f, 1f);
+
+        Button resumeButton = CreateMenuButton(pausePanel.transform, "Resume Button", "Resume", new Vector2(-155f, 32f));
         resumeButton.onClick.RemoveAllListeners();
         resumeButton.onClick.AddListener(() =>
         {
@@ -351,7 +381,7 @@ public class UIManager : MonoBehaviour
             }
         });
 
-        Button restartButton = CreateMenuButton(pausePanel.transform, "Restart Button", "Restart", new Vector2(0f, 42f));
+        Button restartButton = CreateMenuButton(pausePanel.transform, "Restart Button", "Restart", new Vector2(155f, 32f));
         restartButton.onClick.RemoveAllListeners();
         restartButton.onClick.AddListener(() =>
         {
@@ -362,6 +392,45 @@ public class UIManager : MonoBehaviour
         });
 
         pausePanel.SetActive(false);
+    }
+
+    private void UpdateStatsText()
+    {
+        if (statsText == null)
+        {
+            return;
+        }
+
+        AutoWeapon weapon = FindFirstObjectByType<AutoWeapon>();
+        PlayerController playerController = FindFirstObjectByType<PlayerController>();
+        PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
+        LevelSystem levelSystem = FindFirstObjectByType<LevelSystem>();
+        GameManager gameManager = GameManager.Instance;
+
+        string survivalTime = "00:00";
+        if (gameManager != null)
+        {
+            int minutes = Mathf.FloorToInt(gameManager.SurvivalTime / 60f);
+            int seconds = Mathf.FloorToInt(gameManager.SurvivalTime % 60f);
+            survivalTime = $"{minutes:00}:{seconds:00}";
+        }
+
+        string hp = playerHealth == null ? "-- / --" : $"{Mathf.CeilToInt(playerHealth.CurrentHealth)} / {Mathf.CeilToInt(playerHealth.MaxHealth)}";
+        string level = levelSystem == null ? "--" : levelSystem.CurrentLevel.ToString();
+        string xp = levelSystem == null ? "-- / --" : $"{levelSystem.CurrentXP} / {levelSystem.XPToNextLevel}";
+        string damage = weapon == null ? "--" : weapon.Damage.ToString("0.0");
+        string fireRate = weapon == null ? "--" : $"{weapon.FireRate:0.00}/s ({weapon.FireInterval:0.00}s)";
+        string moveSpeed = playerController == null ? "--" : playerController.MoveSpeed.ToString("0.0");
+        string projectileSize = weapon == null ? "--" : $"{weapon.ProjectileSize:0.00}x";
+        string projectileCount = weapon == null ? "--" : weapon.ProjectileCount.ToString();
+        string xpMagnet = XPOrb.CurrentAttractionRadius.ToString("0.0");
+        int activeEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length;
+
+        statsText.text =
+            $"HP: {hp}        Level: {level}        XP: {xp}\n" +
+            $"Damage: {damage}        Fire Rate: {fireRate}\n" +
+            $"Move Speed: {moveSpeed}        Projectile Size: {projectileSize}        Multi Shot: {projectileCount}\n" +
+            $"XP Magnet: {xpMagnet}        Survival Time: {survivalTime}        Active Enemies: {activeEnemies}";
     }
 
     private static Text CreateHudText(Transform parent, string name, string content, Vector2 anchoredPosition)
