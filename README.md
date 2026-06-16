@@ -13,6 +13,7 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
 - Move: `WASD` or arrow keys.
 - Pause/resume: `Esc` or `P`.
 - Toggle compact runtime stats: `Tab`.
+- Play audio test tone: `T`.
 - View full current player stats: pause with `Esc` or `P`.
 - Level-up choices: click a button or press `1`, `2`, or `3`.
 - Restart from pause: click `Restart`.
@@ -52,6 +53,7 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Gentler early spawn pacing for the first minute.
 - Procedural placeholder SFX for shooting, enemy hits/deaths, XP pickup, level-up, player damage, and game over.
 - Procedural placeholder SFX also play when an upgrade is selected.
+- A short procedural audio test tone plays with `T` during gameplay or pause.
 - Simple runtime pooling for hot combat objects:
   - Projectiles
   - XP orbs
@@ -73,6 +75,21 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Enemy HP bars are larger for high-resolution displays, with a dark border/backplate and high-contrast fill; damaged enemies show bars, and Tank enemies show bars even at full HP.
 
 All visuals and sound effects are generated placeholders at runtime. No external art, audio, paid assets, or extra packages were added.
+
+## Audio / AirPods Troubleshooting
+
+This project uses Unity `AudioSource` playback with runtime-generated procedural `AudioClip` tones. The gameplay code does not call FMOD APIs directly and does not try to switch Unity or macOS output devices.
+
+If AirPods or another Bluetooth output does not play sound in the Unity Editor:
+
+1. Set the macOS output device to AirPods before starting Play Mode.
+2. Set the macOS input device to the MacBook microphone or another non-AirPods microphone if possible.
+3. Restart the Unity Editor after changing Bluetooth output devices.
+4. Avoid disconnecting or reconnecting AirPods during Play Mode.
+5. If an FMOD output-device error appears, restart the Unity Editor.
+6. Try MacBook Speakers to distinguish project audio bugs from Unity Editor/device-output issues.
+
+Press `T` in gameplay or pause to play a short test tone. If `T` and normal SFX work on MacBook Speakers but not AirPods, the issue is likely in the Unity Editor, macOS audio routing, or Bluetooth device state rather than this project's SFX code.
 
 ## Enemy Variety
 

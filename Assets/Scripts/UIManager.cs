@@ -374,7 +374,7 @@ public class UIManager : MonoBehaviour
         titleRect.anchoredPosition = new Vector2(0f, -34f);
         titleRect.sizeDelta = new Vector2(-80f, 78f);
 
-        pauseDetailsText = GetOrCreateText(pausePanel.transform, "Pause Details", "Press Esc or P to resume", PauseDetailsFontSize, TextAnchor.MiddleCenter);
+        pauseDetailsText = GetOrCreateText(pausePanel.transform, "Pause Details", "Press Esc or P to resume\nAudio Test: T", PauseDetailsFontSize, TextAnchor.MiddleCenter);
         RectTransform detailsRect = pauseDetailsText.rectTransform;
         detailsRect.anchorMin = new Vector2(0f, 1f);
         detailsRect.anchorMax = new Vector2(1f, 1f);
@@ -522,7 +522,7 @@ public class UIManager : MonoBehaviour
         startHintTimer = 0f;
         hint.SetActive(true);
 
-        startHintText = GetOrCreateText(hint.transform, "Hint Text", "Move: WASD / Arrow Keys    Pause: Esc / P    Tab: Stats\nChoose Upgrade: 1 / 2 / 3 or Click", StartHintFontSize, TextAnchor.MiddleCenter);
+        startHintText = GetOrCreateText(hint.transform, "Hint Text", "Move: WASD / Arrow Keys    Pause: Esc / P    Tab: Stats    Audio Test: T\nChoose Upgrade: 1 / 2 / 3 or Click", StartHintFontSize, TextAnchor.MiddleCenter);
         RectTransform textRect = startHintText.rectTransform;
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;

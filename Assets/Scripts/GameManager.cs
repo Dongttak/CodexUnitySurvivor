@@ -61,6 +61,15 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        if (!IsGameOver && !isUpgradePaused && WasAudioTestPressed())
+        {
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayTestTone();
+            }
+            return;
+        }
+
         if (IsGameplayActive)
         {
             SurvivalTime += Time.deltaTime;
@@ -88,6 +97,16 @@ public class GameManager : MonoBehaviour
         return keyboard != null && (keyboard.escapeKey.wasPressedThisFrame || keyboard.pKey.wasPressedThisFrame);
 #else
         return Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P);
+#endif
+    }
+
+    private static bool WasAudioTestPressed()
+    {
+#if ENABLE_INPUT_SYSTEM
+        Keyboard keyboard = Keyboard.current;
+        return keyboard != null && keyboard.tKey.wasPressedThisFrame;
+#else
+        return Input.GetKeyDown(KeyCode.T);
 #endif
     }
 

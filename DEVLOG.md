@@ -233,3 +233,23 @@ Known limitations:
 - Responsive layout was validated through runtime object inspection and Play Mode probes, but not by pixel-perfect screenshot review at every listed resolution.
 - The UI is still runtime uGUI placeholder styling rather than a final art-directed interface.
 - The always-visible runtime stats panel intentionally occupies right-side screen space for development playtesting and can be hidden with `Tab`.
+
+## 2026-06-16 - Audio Robustness And Autonomous Roadmap Pass 01
+
+- Created and switched to branch `ai-audio-airpods-and-autonomous-roadmap-pass-01` from `ai-responsive-uiux-pass-01`.
+- Initial Hera preflight failed because no Unity Editor instance was running; launched Unity 6 for this project, then reran Hera status, list, console, scene info, and root object inspection successfully.
+- Manual feedback addressed: audio can work on some outputs, but AirPods/Bluetooth output may fail or show a Unity/FMOD device-switching message.
+- Reviewed `AudioManager`, `GameManager`, `README.md`, `DEVLOG.md`, and `PLAYTEST_CHECKLIST.md` before making changes.
+- Confirmed project code does not directly use FMOD APIs and does not attempt to switch audio output devices.
+- Improved `AudioManager` robustness with a public mute flag/API, read-only master volume access, cached procedural clips, a reusable scene `AudioSource`, fallback `AudioSource` creation, duplicate-component protection, and an optional non-spammy missing-`AudioListener` diagnostic.
+- Added `AudioManager.PlayTestTone()` and wired `T` to play a short procedural test tone during gameplay or normal pause.
+- Updated the start hint and pause hint to mention `Audio Test: T`.
+- Added AirPods/Bluetooth troubleshooting notes to `README.md`.
+- Added `AUTONOMOUS_ROADMAP.md` to describe safe future development phases.
+- Added `AI_DEVELOPMENT_RULES.md` to capture branch, validation, staging, documentation, and safety guardrails for future autonomous passes.
+- This pass does not claim the AirPods issue is fixed; if the problem is Unity Editor audio device switching after initialization, the reliable workaround is to configure macOS output/input before launching Unity and restart Unity after FMOD output errors.
+
+Known limitations:
+- AirPods output could not be verified automatically through Hera; manual device testing is still required.
+- The audio system still uses placeholder procedural SFX only; no BGM or imported audio assets were added.
+- Unity Editor/Bluetooth/FMOD output-device behavior remains outside project gameplay-code control.

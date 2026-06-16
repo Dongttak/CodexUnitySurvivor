@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -6,6 +7,8 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance { get; private set; }
 
     [SerializeField, Range(0f, 1f)] private float masterVolume = 0.35f;
+    [SerializeField] private bool muted;
+    [SerializeField] private bool logAudioDiagnostics;
     [SerializeField, Range(0f, 1f)] private float shootVolume = 0.32f;
     [SerializeField, Range(0f, 1f)] private float hitVolume = 0.22f;
     [SerializeField, Range(0f, 1f)] private float deathVolume = 0.34f;
@@ -14,7 +17,10 @@ public class AudioManager : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float playerDamageVolume = 0.36f;
     [SerializeField, Range(0f, 1f)] private float gameOverVolume = 0.45f;
     [SerializeField, Range(0f, 1f)] private float upgradeSelectedVolume = 0.34f;
+    [SerializeField, Range(0f, 1f)] private float testToneVolume = 0.38f;
     [SerializeField] private float hitSoundCooldown = 0.04f;
+
+    private static readonly Dictionary<string, AudioClip> ClipCache = new Dictionary<string, AudioClip>();
 
     private AudioSource audioSource;
     private AudioClip shootClip;
@@ -25,23 +31,60 @@ public class AudioManager : MonoBehaviour
     private AudioClip playerDamageClip;
     private AudioClip gameOverClip;
     private AudioClip upgradeSelectedClip;
+    private AudioClip testToneClip;
     private float nextHitSoundTime;
+
+    public float MasterVolume => masterVolume;
+    public bool IsMuted => muted;
 
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
+            if (logAudioDiagnostics)
+            {
+                Debug.LogWarning("Duplicate AudioManager detected; disabling the duplicate component.");
+            }
+
             Destroy(this);
             return;
         }
 
         Instance = this;
         audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
         audioSource.playOnAwake = false;
         audioSource.loop = false;
         audioSource.spatialBlend = 0f;
 
+        if (logAudioDiagnostics && FindFirstObjectByType<AudioListener>() == null)
+        {
+            Debug.LogWarning("AudioManager did not find an AudioListener. Add or enable one if no sound is heard.");
+        }
+
         BuildClips();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
+    public void SetMuted(bool shouldMute)
+    {
+        muted = shouldMute;
+    }
+
+    public void ToggleMuted()
+    {
+        muted = !muted;
     }
 
     public void PlayShoot()
@@ -90,27 +133,57 @@ public class AudioManager : MonoBehaviour
         Play(upgradeSelectedClip, upgradeSelectedVolume, 1f);
     }
 
+    public void PlayTestTone()
+    {
+        Play(testToneClip, testToneVolume, 1f);
+    }
+
     private void BuildClips()
     {
-        shootClip = CreateTone("SFX Shoot", 720f, 930f, 0.055f, WaveType.Square);
-        hitClip = CreateTone("SFX Enemy Hit", 260f, 180f, 0.06f, WaveType.Noise);
-        deathClip = CreateTone("SFX Enemy Death", 180f, 70f, 0.16f, WaveType.Saw);
-        xpClip = CreateTone("SFX XP Pickup", 920f, 1320f, 0.07f, WaveType.Sine);
-        levelUpClip = CreateArpeggio("SFX Level Up", new[] { 520f, 660f, 880f }, 0.24f);
-        playerDamageClip = CreateTone("SFX Player Damage", 150f, 90f, 0.14f, WaveType.Square);
-        gameOverClip = CreateTone("SFX Game Over", 220f, 55f, 0.36f, WaveType.Sine);
-        upgradeSelectedClip = CreateTone("SFX Upgrade Selected", 680f, 1040f, 0.12f, WaveType.Sine);
+        shootClip = GetOrCreateTone("SFX Shoot", 720f, 930f, 0.055f, WaveType.Square);
+        hitClip = GetOrCreateTone("SFX Enemy Hit", 260f, 180f, 0.06f, WaveType.Noise);
+        deathClip = GetOrCreateTone("SFX Enemy Death", 180f, 70f, 0.16f, WaveType.Saw);
+        xpClip = GetOrCreateTone("SFX XP Pickup", 920f, 1320f, 0.07f, WaveType.Sine);
+        levelUpClip = GetOrCreateArpeggio("SFX Level Up", new[] { 520f, 660f, 880f }, 0.24f);
+        playerDamageClip = GetOrCreateTone("SFX Player Damage", 150f, 90f, 0.14f, WaveType.Square);
+        gameOverClip = GetOrCreateTone("SFX Game Over", 220f, 55f, 0.36f, WaveType.Sine);
+        upgradeSelectedClip = GetOrCreateTone("SFX Upgrade Selected", 680f, 1040f, 0.12f, WaveType.Sine);
+        testToneClip = GetOrCreateTone("SFX Audio Test Tone", 660f, 660f, 0.18f, WaveType.Sine);
     }
 
     private void Play(AudioClip clip, float volume, float pitch)
     {
-        if (clip == null || audioSource == null || masterVolume <= 0f || volume <= 0f)
+        if (muted || clip == null || audioSource == null || masterVolume <= 0f || volume <= 0f)
         {
             return;
         }
 
         audioSource.pitch = pitch;
         audioSource.PlayOneShot(clip, masterVolume * volume);
+    }
+
+    private static AudioClip GetOrCreateTone(string clipName, float startFrequency, float endFrequency, float duration, WaveType waveType)
+    {
+        string key = $"{clipName}:{startFrequency:0.###}:{endFrequency:0.###}:{duration:0.###}:{waveType}";
+        if (!ClipCache.TryGetValue(key, out AudioClip clip) || clip == null)
+        {
+            clip = CreateTone(clipName, startFrequency, endFrequency, duration, waveType);
+            ClipCache[key] = clip;
+        }
+
+        return clip;
+    }
+
+    private static AudioClip GetOrCreateArpeggio(string clipName, float[] frequencies, float duration)
+    {
+        string key = $"{clipName}:{string.Join("-", frequencies)}:{duration:0.###}:arpeggio";
+        if (!ClipCache.TryGetValue(key, out AudioClip clip) || clip == null)
+        {
+            clip = CreateArpeggio(clipName, frequencies, duration);
+            ClipCache[key] = clip;
+        }
+
+        return clip;
     }
 
     private static AudioClip CreateTone(string clipName, float startFrequency, float endFrequency, float duration, WaveType waveType)

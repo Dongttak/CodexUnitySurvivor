@@ -9,7 +9,8 @@
 5. Choose level-up upgrades by clicking a button or pressing `1`, `2`, or `3`.
 6. Pause/resume with `Esc` or `P`.
 7. Toggle compact stats with `Tab`.
-8. After game over, restart with the Restart button or `R`.
+8. Press `T` to play an audio test tone.
+9. After game over, restart with the Restart button or `R`.
 
 ## 5-Minute Manual Playtest
 
@@ -23,6 +24,8 @@
 - [ ] Toggle the compact stats panel off and on with `Tab`.
 - [ ] Confirm the start hint appears at the beginning and hides after a few seconds.
 - [ ] Pause and resume once with `Esc` or `P`.
+- [ ] Press `T` during gameplay and confirm the audio test tone plays on the selected output.
+- [ ] Press `T` while paused and confirm the audio test tone still plays.
 - [ ] Let the player die and confirm game over appears.
 - [ ] Restart and confirm the run resets cleanly.
 - [ ] Stop Play Mode and check the Unity console for errors.
@@ -190,6 +193,18 @@
 - [ ] Early game has enough breathing room to learn movement.
 - [ ] The first level-up happens soon enough to demonstrate the core loop.
 
+## Audio Checks
+
+- [ ] With MacBook Speakers selected before launching Unity, press `T` and hear the test tone.
+- [ ] With MacBook Speakers selected, confirm shoot, hit, enemy death, XP pickup, level-up, player damage, upgrade-select, and game-over SFX play.
+- [ ] With AirPods selected before launching Unity, press `T` and note whether the test tone plays.
+- [ ] With AirPods selected before launching Unity, confirm normal SFX events play or record which events are silent.
+- [ ] Set macOS input to MacBook microphone or another non-AirPods input and retest AirPods output.
+- [ ] Avoid reconnecting AirPods during Play Mode and verify whether audio remains stable.
+- [ ] Reconnect AirPods during Play Mode once as a stress test and record whether audio drops or Unity/FMOD messages appear.
+- [ ] If an FMOD output-device error appears, restart Unity Editor and retest before marking it as a project bug.
+- [ ] Compare AirPods behavior with MacBook Speakers to determine whether the issue reproduces only on Bluetooth output.
+
 ## Balance Notes To Observe
 
 - Note the time of the first level-up.
@@ -213,6 +228,9 @@
 - Note whether XP Magnet makes collection too automatic too quickly.
 - Note whether HP upgrades and heal upgrades both feel worth choosing.
 - Note if one upgrade is always obviously better than the others.
+- Note whether audio issues reproduce only on Bluetooth/AirPods or also on MacBook Speakers.
+- Note whether `T` test tone works while normal gameplay SFX are silent, or vice versa.
+- Note whether changing macOS input away from AirPods improves output stability.
 
 ## Bugs To Watch For
 
@@ -253,6 +271,10 @@
 - Pause panel labels clipping at smaller Game view sizes.
 - Game over final level showing the wrong value.
 - Feedback pulses accumulating or lingering too long.
+- `T` audio test tone not playing during gameplay or pause.
+- SFX working on MacBook Speakers but not AirPods.
+- Unity/FMOD output-device errors after disconnecting or reconnecting AirPods during Play Mode.
+- Duplicate AudioManager instances after scene restart or domain reload.
 
 ## Suggested Next Tasks After Manual Playtest
 
