@@ -100,9 +100,6 @@ public class AutoWeapon : MonoBehaviour
 
     private void SpawnProjectile(Vector2 direction)
     {
-        GameObject projectileObject = new GameObject("Projectile");
-        projectileObject.transform.position = transform.position;
-        Projectile projectile = projectileObject.AddComponent<Projectile>();
-        projectile.Initialize(direction, damage, projectileSpeed, projectileSize);
+        Projectile.Spawn(transform.position, direction, damage, projectileSpeed, projectileSize);
     }
 }

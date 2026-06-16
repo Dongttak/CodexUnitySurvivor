@@ -110,3 +110,23 @@ Validation result: pass. Unity console returned no errors after procedural SFX v
 - Stopped Play Mode with Hera and rechecked the Unity console; no errors were returned.
 
 Validation result: pass. Existing MVP loop, procedural SFX, and original upgrades remain intact while the level-up pool now offers more variety.
+
+## 2026-06-16 - Combat Readability, Optimization, And Enemy Variety
+
+- Continued from the previously blocked branch `ai-combat-readability-optimization-enemy-pass-01` without discarding partial work.
+- Ran `git status --short`, Hera status, Hera console error checks, Unity refresh/compile, scene inspection, and Play Mode validation.
+- Fixed one compile error in `EnemySpawner` by qualifying `UnityEngine.Random` after adding `using System`.
+- Added floating damage numbers when enemies take projectile damage.
+- Added lightweight enemy HP bars above enemies that update after damage.
+- Added simple per-class object pools for projectiles, XP orbs, feedback pulses, floating damage numbers, and enemies to reduce hot-path `new GameObject` and `Destroy` churn.
+- Added `EnemySpawner.EnemyDefinition` data for Basic, Fast, and Tank enemies with tunable HP, movement speed, contact damage, XP value, visual color, and visual size.
+- Updated enemy spawning over elapsed time: Basic only before 1 minute, Basic/Fast between 1 and 2 minutes, and Basic/Fast/Tank after 2 minutes.
+- Validated in Play Mode through Hera that Player and EnemySpawner exist, Basic/Fast/Tank definitions are configured, and pooled projectile, XP orb, damage number, feedback effect, and enemy paths can be exercised.
+- Existing upgrades and procedural SFX continue to compile; Projectile Size and Multi Shot use the pooled projectile spawn path.
+
+Optimization notes:
+- Pooling is intentionally simple and local to each hot-path class rather than a large generic framework.
+- Enemies are pooled, but active enemy counting still uses `FindObjectsByType<Enemy>`; this is acceptable for the current MVP but can be optimized later if enemy counts grow.
+- UI/HUD objects and core scene managers are not pooled because they are not hot combat allocations.
+
+Validation result: pass. Unity console returned no errors after compile and Play Mode validation.

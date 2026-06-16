@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class XPOrb : MonoBehaviour
 {
+    private static readonly Queue<XPOrb> Pool = new Queue<XPOrb>();
+
     [SerializeField] private int value = 1;
     [SerializeField] private float attractRadius = 3.4f;
     [SerializeField] private float collectRadius = 0.35f;
@@ -10,11 +13,13 @@ public class XPOrb : MonoBehaviour
     private Transform player;
     private LevelSystem levelSystem;
     private static float attractionRadiusBonus;
+    private bool active;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStaticState()
     {
         attractionRadiusBonus = 0f;
+        Pool.Clear();
     }
 
     private void Awake()
@@ -51,6 +56,11 @@ public class XPOrb : MonoBehaviour
 
     private void Update()
     {
+        if (!active)
+        {
+            return;
+        }
+
         if (player == null || levelSystem == null)
         {
             return;
@@ -76,10 +86,12 @@ public class XPOrb : MonoBehaviour
 
     public static XPOrb Create(Vector3 position, int xpValue)
     {
-        GameObject orbObject = new GameObject("XP Orb");
-        orbObject.transform.position = position;
-        XPOrb orb = orbObject.AddComponent<XPOrb>();
+        XPOrb orb = Get();
+        orb.transform.position = position;
         orb.value = xpValue;
+        orb.ResolveReferences();
+        orb.active = true;
+        orb.gameObject.SetActive(true);
         return orb;
     }
 
@@ -104,6 +116,33 @@ public class XPOrb : MonoBehaviour
             levelSystem.AddXP(value);
         }
 
-        Destroy(gameObject);
+        Release();
+    }
+
+    private static XPOrb Get()
+    {
+        if (Pool.Count > 0)
+        {
+            return Pool.Dequeue();
+        }
+
+        GameObject orbObject = new GameObject("XP Orb");
+        XPOrb orb = orbObject.AddComponent<XPOrb>();
+        orbObject.SetActive(false);
+        return orb;
+    }
+
+    private void ResolveReferences()
+    {
+        PlayerController playerController = FindFirstObjectByType<PlayerController>();
+        player = playerController != null ? playerController.transform : null;
+        levelSystem = FindFirstObjectByType<LevelSystem>();
+    }
+
+    private void Release()
+    {
+        active = false;
+        gameObject.SetActive(false);
+        Pool.Enqueue(this);
     }
 }

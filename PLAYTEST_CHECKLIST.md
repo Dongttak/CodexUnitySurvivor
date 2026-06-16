@@ -35,6 +35,8 @@
 - [ ] Projectiles are visible against the background.
 - [ ] Projectiles travel fast enough to read as intentional shots.
 - [ ] Projectiles hit enemies and disappear on impact.
+- [ ] Floating damage numbers appear near enemies when projectiles hit.
+- [ ] Enemy HP bars appear above enemies and shrink after damage.
 - [ ] Enemies flash or pulse when hit.
 - [ ] Enemies die after a small number of hits.
 - [ ] Enemy death pulse is visible without obscuring gameplay.
@@ -47,6 +49,10 @@
 - [ ] Spawn pace gradually increases over time.
 - [ ] Enemy count does not explode so quickly that movement becomes impossible in the first minute.
 - [ ] Enemies consistently chase the player.
+- [ ] First minute uses only red Basic enemies.
+- [ ] After about 1 minute, smaller/faster orange Fast enemies can appear.
+- [ ] After about 2 minutes, larger purple Tank enemies can appear.
+- [ ] Basic, Fast, and Tank enemies are visually distinguishable by color and size.
 
 ## XP And Level-Up Checks
 
@@ -76,6 +82,7 @@
 - [ ] Projectile Size Up makes projectiles visibly larger and easier to hit with.
 - [ ] XP Magnet pulls XP orbs from farther away.
 - [ ] Multi Shot adds one projectile per attack.
+- [ ] Multi Shot still works after Projectile Size Up, and the larger pooled projectiles reset correctly between shots.
 - [ ] Upgrade selection plays a short procedural SFX.
 
 ## Game Over And Restart Checks
@@ -88,6 +95,7 @@
 - [ ] Restart button reloads the run.
 - [ ] `R` reloads the run from game over.
 - [ ] Restart clears old enemies, projectiles, XP orbs, and feedback pulses.
+- [ ] Restart does not leave stale pooled damage numbers or HP bars visible.
 
 ## UI Readability Checks
 
@@ -106,6 +114,8 @@
 - [ ] Projectile feedback is visible but not distracting.
 - [ ] Hit and death pulses help clarify combat results.
 - [ ] XP pickup feels clear and rewarding.
+- [ ] Damage numbers are readable but do not clutter the screen heavily.
+- [ ] Enemy HP bars help show durability without covering the playfield.
 - [ ] Early game has enough breathing room to learn movement.
 - [ ] The first level-up happens soon enough to demonstrate the core loop.
 
@@ -118,6 +128,9 @@
 - Note whether the spawn ramp feels fair at 1, 3, and 5 minutes.
 - Note whether movement speed upgrades become too fast after repeated picks.
 - Note whether projectile size or multi shot becomes visually cluttered.
+- Note whether damage numbers or HP bars become visually noisy with many enemies.
+- Note whether Fast enemies feel fair when they unlock around 1 minute.
+- Note whether Tank enemies feel too durable or too rewarding after 2 minutes.
 - Note whether XP Magnet makes collection too automatic too quickly.
 - Note whether HP upgrades and heal upgrades both feel worth choosing.
 - Note if one upgrade is always obviously better than the others.
@@ -136,6 +149,10 @@
 - New upgrades appearing in UI but not changing gameplay.
 - Game over panel not appearing.
 - Restart leaving old runtime objects in the scene.
+- Pooled projectiles reusing stale size, direction, or damage.
+- Pooled XP orbs reusing stale XP values or failing to attract.
+- Pooled damage numbers reusing stale text, alpha, or position.
+- Enemy HP bars failing to reset when pooled enemies are reused.
 - UI text missing because runtime UI construction failed.
 - Feedback pulses accumulating or lingering too long.
 

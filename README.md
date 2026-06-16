@@ -19,9 +19,10 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
 - Player movement with 2D physics.
 - Camera follow.
 - Enemy spawning around the player.
-- Enemies chase and damage the player on contact.
+- Basic, Fast, and Tank enemies spawn over time, chase the player, and damage on contact.
 - Automatic nearest-enemy projectile attacks.
 - Projectile damage, enemy death, and XP orb drops.
+- Floating damage numbers and small enemy HP bars for combat readability.
 - XP collection and level-ups.
 - Paused level-up upgrade choices:
   - Projectile damage
@@ -43,8 +44,26 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Gentler early spawn pacing for the first minute.
 - Procedural placeholder SFX for shooting, enemy hits/deaths, XP pickup, level-up, player damage, and game over.
 - Procedural placeholder SFX also play when an upgrade is selected.
+- Simple runtime pooling for hot combat objects:
+  - Projectiles
+  - XP orbs
+  - Feedback pulses
+  - Floating damage numbers
+  - Enemies
 
 All visuals and sound effects are generated placeholders at runtime. No external art, audio, paid assets, or extra packages were added.
+
+## Enemy Variety
+
+- Basic Enemy: balanced HP, speed, damage, and XP.
+- Fast Enemy: lower HP, faster movement, smaller orange visual, lower contact damage.
+- Tank Enemy: higher HP, slower movement, larger purple visual, higher XP reward.
+
+Enemy availability changes over time:
+
+- `0:00` Basic only.
+- `1:00` mostly Basic, some Fast.
+- `2:00+` Basic, Fast, and Tank.
 
 ## Scene Setup
 
