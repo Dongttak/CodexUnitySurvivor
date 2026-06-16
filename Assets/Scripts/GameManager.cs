@@ -13,8 +13,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LevelSystem levelSystem;
 
     public bool IsGameOver { get; private set; }
+    public bool IsPaused { get; private set; }
     public float SurvivalTime { get; private set; }
     public bool IsGameplayActive => !IsGameOver && Time.timeScale > 0f;
+    private bool isUpgradePaused;
 
     private void Awake()
     {
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
         {
             uiManager.SetSurvivalTime(SurvivalTime);
             uiManager.HideGameOver();
+            uiManager.HidePause();
         }
     }
 
@@ -49,6 +52,12 @@ public class GameManager : MonoBehaviour
         if (IsGameOver && WasRestartPressed())
         {
             RestartGame();
+            return;
+        }
+
+        if (!IsGameOver && !isUpgradePaused && WasPausePressed())
+        {
+            TogglePause();
             return;
         }
 
@@ -72,19 +81,73 @@ public class GameManager : MonoBehaviour
 #endif
     }
 
+    private static bool WasPausePressed()
+    {
+#if ENABLE_INPUT_SYSTEM
+        Keyboard keyboard = Keyboard.current;
+        return keyboard != null && (keyboard.escapeKey.wasPressedThisFrame || keyboard.pKey.wasPressedThisFrame);
+#else
+        return Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P);
+#endif
+    }
+
     public void PauseForUpgrade()
     {
         if (!IsGameOver)
         {
+            isUpgradePaused = true;
             Time.timeScale = 0f;
         }
     }
 
     public void ResumeGameplay()
     {
-        if (!IsGameOver)
+        isUpgradePaused = false;
+        if (!IsGameOver && !IsPaused)
         {
             Time.timeScale = 1f;
+        }
+    }
+
+    public void TogglePause()
+    {
+        if (IsPaused)
+        {
+            ResumeFromPause();
+        }
+        else
+        {
+            PauseGame();
+        }
+    }
+
+    public void PauseGame()
+    {
+        if (IsGameOver || isUpgradePaused || IsPaused)
+        {
+            return;
+        }
+
+        IsPaused = true;
+        Time.timeScale = 0f;
+        if (uiManager != null)
+        {
+            uiManager.ShowPause();
+        }
+    }
+
+    public void ResumeFromPause()
+    {
+        if (!IsPaused || IsGameOver || isUpgradePaused)
+        {
+            return;
+        }
+
+        IsPaused = false;
+        Time.timeScale = 1f;
+        if (uiManager != null)
+        {
+            uiManager.HidePause();
         }
     }
 
@@ -102,6 +165,8 @@ public class GameManager : MonoBehaviour
         }
 
         IsGameOver = true;
+        IsPaused = false;
+        isUpgradePaused = false;
         Time.timeScale = 0f;
         if (AudioManager.Instance != null)
         {
@@ -110,6 +175,7 @@ public class GameManager : MonoBehaviour
 
         if (uiManager != null)
         {
+            uiManager.HidePause();
             uiManager.ShowGameOver(SurvivalTime);
         }
     }

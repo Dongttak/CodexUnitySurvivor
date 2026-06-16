@@ -7,6 +7,11 @@ using System.Collections.Generic;
 
 public class UpgradeManager : MonoBehaviour
 {
+    private const int TitleFontSize = 44;
+    private const int ShortcutFontSize = 30;
+    private const int UpgradeNameFontSize = 31;
+    private const int DescriptionFontSize = 22;
+
     private GameObject panel;
     private Button damageButton;
     private Button fireRateButton;
@@ -44,9 +49,9 @@ public class UpgradeManager : MonoBehaviour
         activeChoices.Clear();
         activeChoices.AddRange(choices);
         titleText.text = "Choose an Upgrade";
-        ConfigureButton(damageButton, GetLabel(0), () => Choose(0));
-        ConfigureButton(fireRateButton, GetLabel(1), () => Choose(1));
-        ConfigureButton(moveSpeedButton, GetLabel(2), () => Choose(2));
+        ConfigureButton(damageButton, 0, () => Choose(0));
+        ConfigureButton(fireRateButton, 1, () => Choose(1));
+        ConfigureButton(moveSpeedButton, 2, () => Choose(2));
         panel.SetActive(true);
     }
 
@@ -73,17 +78,6 @@ public class UpgradeManager : MonoBehaviour
         levelSystem.ApplyUpgrade(upgradeType);
     }
 
-    private string GetLabel(int choiceIndex)
-    {
-        if (choiceIndex < 0 || choiceIndex >= activeChoices.Count)
-        {
-            return string.Empty;
-        }
-
-        LevelSystem.UpgradeChoice choice = activeChoices[choiceIndex];
-        return $"[{choiceIndex + 1}] {choice.Name}\n{choice.Description}";
-    }
-
     private void EnsurePanel()
     {
         if (panel != null)
@@ -100,18 +94,18 @@ public class UpgradeManager : MonoBehaviour
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(620f, 420f);
+        rect.sizeDelta = new Vector2(740f, 500f);
         rect.anchoredPosition = Vector2.zero;
 
         Image background = EnsureImage(panel);
         background.color = new Color(0.04f, 0.05f, 0.065f, 0.96f);
 
-        titleText = GetOrCreateText(panel.transform, "Title", "Choose an Upgrade", 36, TextAnchor.MiddleCenter);
-        SetRect(titleText.rectTransform, new Vector2(0f, 160f), new Vector2(540f, 54f));
+        titleText = GetOrCreateText(panel.transform, "Title", "Choose an Upgrade", TitleFontSize, TextAnchor.MiddleCenter);
+        SetRect(titleText.rectTransform, new Vector2(0f, 194f), new Vector2(640f, 66f));
 
-        damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 78f));
-        fireRateButton = CreateChoiceButton("Fire Rate Button", new Vector2(0f, -30f));
-        moveSpeedButton = CreateChoiceButton("Move Speed Button", new Vector2(0f, -138f));
+        damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 92f));
+        fireRateButton = CreateChoiceButton("Fire Rate Button", new Vector2(0f, -34f));
+        moveSpeedButton = CreateChoiceButton("Move Speed Button", new Vector2(0f, -160f));
 
         panel.SetActive(false);
     }
@@ -122,7 +116,7 @@ public class UpgradeManager : MonoBehaviour
         buttonObject.transform.SetParent(panel.transform, false);
 
         RectTransform rect = EnsureRectTransform(buttonObject);
-        SetRect(rect, position, new Vector2(520f, 86f));
+        SetRect(rect, position, new Vector2(620f, 104f));
 
         Image image = EnsureImage(buttonObject);
         image.color = new Color(0.14f, 0.25f, 0.31f, 0.98f);
@@ -141,25 +135,42 @@ public class UpgradeManager : MonoBehaviour
         colors.disabledColor = new Color(0.12f, 0.12f, 0.12f, 0.65f);
         button.colors = colors;
 
-        Text label = GetOrCreateText(buttonObject.transform, "Label", "", 22, TextAnchor.MiddleLeft);
-        label.color = Color.white;
-        RectTransform labelRect = label.rectTransform;
-        labelRect.anchorMin = Vector2.zero;
-        labelRect.anchorMax = Vector2.one;
-        labelRect.offsetMin = new Vector2(28f, 10f);
-        labelRect.offsetMax = new Vector2(-24f, -10f);
+        Text shortcut = GetOrCreateText(buttonObject.transform, "Shortcut", "[1]", ShortcutFontSize, TextAnchor.MiddleCenter);
+        SetChildRect(shortcut.rectTransform, new Vector2(0f, 0f), new Vector2(86f, 82f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
+
+        Text nameText = GetOrCreateText(buttonObject.transform, "Name", "", UpgradeNameFontSize, TextAnchor.LowerLeft);
+        SetChildRect(nameText.rectTransform, new Vector2(96f, 12f), new Vector2(490f, 40f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
+
+        Text description = GetOrCreateText(buttonObject.transform, "Description", "", DescriptionFontSize, TextAnchor.UpperLeft);
+        description.color = new Color(0.84f, 0.92f, 0.96f);
+        SetChildRect(description.rectTransform, new Vector2(96f, -18f), new Vector2(490f, 34f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
 
         return button;
     }
 
-    private static void ConfigureButton(Button button, string label, UnityEngine.Events.UnityAction action)
+    private void ConfigureButton(Button button, int choiceIndex, UnityEngine.Events.UnityAction action)
     {
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(action);
-        Text text = button.GetComponentInChildren<Text>();
-        if (text != null)
+
+        LevelSystem.UpgradeChoice choice = activeChoices[choiceIndex];
+        Text shortcut = FindChildText(button.transform, "Shortcut");
+        Text nameText = FindChildText(button.transform, "Name");
+        Text description = FindChildText(button.transform, "Description");
+
+        if (shortcut != null)
         {
-            text.text = label;
+            shortcut.text = $"[{choiceIndex + 1}]";
+        }
+
+        if (nameText != null)
+        {
+            nameText.text = choice.Name;
+        }
+
+        if (description != null)
+        {
+            description.text = choice.Description;
         }
     }
 
@@ -168,6 +179,15 @@ public class UpgradeManager : MonoBehaviour
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.anchoredPosition = position;
+        rect.sizeDelta = size;
+    }
+
+    private static void SetChildRect(RectTransform rect, Vector2 position, Vector2 size, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
+    {
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+        rect.pivot = pivot;
         rect.anchoredPosition = position;
         rect.sizeDelta = size;
     }
@@ -224,6 +244,12 @@ public class UpgradeManager : MonoBehaviour
         text.color = Color.white;
         text.raycastTarget = false;
         return text;
+    }
+
+    private static Text FindChildText(Transform parent, string name)
+    {
+        Transform child = parent.Find(name);
+        return child == null ? null : child.GetComponent<Text>();
     }
 
     private static bool WasChoicePressed(int choice)

@@ -150,3 +150,23 @@ Known limitations:
 - UI remains built with runtime legacy uGUI placeholders rather than a custom art pass.
 - The start hint is a simple timed fade and does not adapt to controller or touch input.
 - The runtime probe validates UI/object presence and core paths, but final layout feel still needs manual Game view playtesting at the user's target resolution.
+
+## 2026-06-16 - UI Readability And Pause Menu Pass 01
+
+- Created and switched to branch `ai-uiux-fix-pause-pass-01` from `ai-uiux-pass-01`.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`; Unity was connected, `SampleScene` was clean, and console errors were empty.
+- Reviewed `UIManager`, `GameManager`, `UpgradeManager`, `PlayerController`, and `AutoWeapon` before modifying pause/UI behavior.
+- Confirmed the runtime Canvas uses `CanvasScaler.ScaleWithScreenSize`, reference resolution `1920x1080`, and match width/height `0.5`.
+- Increased explicit runtime UI font sizes: HUD text `28`, timer `34`, start hint `26`, level-up title `44`, upgrade shortcut `30`, upgrade name `31`, upgrade description `22`, game-over title `56`, game-over details `30`, pause title `54`, pause details `28`, and menu buttons `30`.
+- Added a pause flow to `GameManager`: `Esc` or `P` toggles pause while normal gameplay is active, sets `Time.timeScale` to `0`, and shows a pause panel.
+- Added a pause panel in `UIManager` with title, resume instruction, Resume button, and Restart button.
+- Kept pause separate from level-up and game-over state: pause input is ignored while an upgrade choice is active, and game over cannot be resumed by pause input.
+- Updated level-up cards to use separate shortcut, name, and description text objects so each part can have a readable explicit size.
+- Updated the game-over panel to use separate large title and details text, including survival time, final level, and `Press R to Restart`.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors.
+- Entered Play Mode through Hera and validated HUD bars, CanvasScaler settings, text font sizes, pause/resume behavior, level-up/pause conflict behavior, game-over/pause conflict behavior, and game-over text sizing.
+- Stopped Play Mode through Hera and rechecked the Unity console; no errors were returned.
+
+Known limitations:
+- UI is still placeholder uGUI assembled at runtime, so manual visual review at `1920x1080` and `1280x720` is still recommended.
+- Pause does not add a full settings menu, quit button, audio sliders, or remapping; it is intentionally limited to resume/restart.

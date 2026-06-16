@@ -7,7 +7,8 @@
 3. Press Play.
 4. Move with `WASD` or arrow keys.
 5. Choose level-up upgrades by clicking a button or pressing `1`, `2`, or `3`.
-6. After game over, restart with the Restart button or `R`.
+6. Pause/resume with `Esc` or `P`.
+7. After game over, restart with the Restart button or `R`.
 
 ## 5-Minute Manual Playtest
 
@@ -18,6 +19,7 @@
 - [ ] Confirm enemies spawn, chase, take damage, die, and drop XP.
 - [ ] Confirm HP, level, XP, and timer update while playing.
 - [ ] Confirm the start hint appears at the beginning and hides after a few seconds.
+- [ ] Pause and resume once with `Esc` or `P`.
 - [ ] Let the player die and confirm game over appears.
 - [ ] Restart and confirm the run resets cleanly.
 - [ ] Stop Play Mode and check the Unity console for errors.
@@ -71,7 +73,8 @@
 - [ ] Level-up panel title is readable.
 - [ ] Level-up panel title says `Choose an Upgrade`.
 - [ ] All three card-like upgrade buttons fit inside the panel.
-- [ ] Each upgrade card shows a shortcut, upgrade name, and short description.
+- [ ] Each upgrade card shows a large shortcut, upgrade name, and short description.
+- [ ] Upgrade names and descriptions do not wrap awkwardly or overflow at `1280x720`.
 - [ ] The three choices vary between level-ups and do not duplicate within the same panel.
 - [ ] `1` selects the first displayed upgrade.
 - [ ] `2` selects the second displayed upgrade.
@@ -88,6 +91,21 @@
 - [ ] Multi Shot adds one projectile per attack.
 - [ ] Multi Shot still works after Projectile Size Up, and the larger pooled projectiles reset correctly between shots.
 - [ ] Upgrade selection plays a short procedural SFX.
+- [ ] Pressing `Esc` or `P` while the level-up panel is visible does not hide the level-up panel or resume gameplay.
+
+## Pause Checks
+
+- [ ] `Esc` pauses gameplay and shows the pause panel.
+- [ ] `P` pauses gameplay and shows the pause panel.
+- [ ] While paused, enemies, projectiles, timer, and player movement stop.
+- [ ] `Esc` resumes from pause.
+- [ ] `P` resumes from pause.
+- [ ] Resume button resumes from pause.
+- [ ] Restart button on the pause panel reloads the run.
+- [ ] Pause panel title `Paused` is large and readable.
+- [ ] Pause panel instruction says `Press Esc or P to resume`.
+- [ ] Pause panel does not appear on top of the level-up panel.
+- [ ] Pause input does not resume gameplay after game over.
 
 ## Game Over And Restart Checks
 
@@ -97,6 +115,7 @@
 - [ ] Game over panel appears when HP reaches zero.
 - [ ] Game over panel shows survival time and final level.
 - [ ] Game over panel clearly shows the restart instruction.
+- [ ] Game over title is large and centered.
 - [ ] Timer stops while game over is displayed.
 - [ ] Restart button reloads the run.
 - [ ] `R` reloads the run from game over.
@@ -105,6 +124,9 @@
 
 ## UI Readability Checks
 
+- [ ] CanvasScaler is set to Scale With Screen Size with a `1920x1080` reference resolution.
+- [ ] At `1920x1080`, HUD, timer, start hint, upgrade panel, pause panel, and game-over panel are readable.
+- [ ] At `1280x720`, HUD, timer, start hint, upgrade panel, pause panel, and game-over panel are still readable.
 - [ ] HP text is readable during movement and combat.
 - [ ] HP bar fill changes when the player takes damage or heals.
 - [ ] Level text updates after leveling.
@@ -112,10 +134,12 @@
 - [ ] XP progress bar fills as XP is collected and resets after level-up.
 - [ ] Timer is readable in the top-right corner.
 - [ ] HUD panels improve contrast without covering the center of the playfield.
+- [ ] Start hint includes movement, pause, and upgrade-selection controls.
 - [ ] Start hint is readable but does not linger too long.
 - [ ] Level-up panel text does not overlap.
 - [ ] Upgrade cards remain readable at common Game view sizes.
 - [ ] Game over text and restart instruction are readable.
+- [ ] Pause panel text and buttons are readable.
 - [ ] UI remains usable at common Game view sizes.
 
 ## Game Feel Checks
@@ -143,6 +167,7 @@
 - Note whether the HUD panels are too large or too transparent at your preferred Game view size.
 - Note whether the start hint duration feels too short or too long.
 - Note whether upgrade card descriptions are clear enough to choose quickly.
+- Note whether pause controls are discoverable enough after the start hint fades.
 - Note whether Fast enemies feel fair when they unlock around 1 minute.
 - Note whether Tank enemies feel too durable or too rewarding after 2 minutes.
 - Note whether XP Magnet makes collection too automatic too quickly.
@@ -162,6 +187,12 @@
 - Duplicate upgrade choices appearing in a single level-up panel.
 - New upgrades appearing in UI but not changing gameplay.
 - Game over panel not appearing.
+- Pause panel not appearing when `Esc` or `P` is pressed.
+- Pause leaving gameplay running in the background.
+- Pause button resume failing after clicking Resume.
+- Pause restarting the scene incorrectly or leaving stale pooled objects.
+- Pause input breaking level-up upgrade selection.
+- Pause input resuming from game over.
 - Restart leaving old runtime objects in the scene.
 - Pooled projectiles reusing stale size, direction, or damage.
 - Pooled XP orbs reusing stale XP values or failing to attract.
@@ -171,6 +202,7 @@
 - HUD bars not filling or resetting correctly.
 - Start hint remaining visible for the whole run.
 - Upgrade card labels clipping at smaller Game view sizes.
+- Pause panel labels clipping at smaller Game view sizes.
 - Game over final level showing the wrong value.
 - Feedback pulses accumulating or lingering too long.
 
