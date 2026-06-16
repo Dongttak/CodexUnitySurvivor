@@ -43,7 +43,7 @@ public class UpgradeManager : MonoBehaviour
         activeLevelSystem = levelSystem;
         activeChoices.Clear();
         activeChoices.AddRange(choices);
-        titleText.text = "Level Up - Choose 1 Upgrade";
+        titleText.text = "Choose an Upgrade";
         ConfigureButton(damageButton, GetLabel(0), () => Choose(0));
         ConfigureButton(fireRateButton, GetLabel(1), () => Choose(1));
         ConfigureButton(moveSpeedButton, GetLabel(2), () => Choose(2));
@@ -81,7 +81,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
         LevelSystem.UpgradeChoice choice = activeChoices[choiceIndex];
-        return $"{choiceIndex + 1}  {choice.Name}\n{choice.Description}";
+        return $"[{choiceIndex + 1}] {choice.Name}\n{choice.Description}";
     }
 
     private void EnsurePanel()
@@ -92,50 +92,62 @@ public class UpgradeManager : MonoBehaviour
         }
 
         Canvas canvas = UIManager.EnsureCanvas();
-        panel = new GameObject("Upgrade Panel");
+        Transform existing = canvas.transform.Find("Upgrade Panel");
+        panel = existing != null ? existing.gameObject : new GameObject("Upgrade Panel");
         panel.transform.SetParent(canvas.transform, false);
 
-        RectTransform rect = panel.AddComponent<RectTransform>();
+        RectTransform rect = EnsureRectTransform(panel);
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(500f, 340f);
+        rect.sizeDelta = new Vector2(620f, 420f);
         rect.anchoredPosition = Vector2.zero;
 
-        Image background = panel.AddComponent<Image>();
-        background.color = new Color(0.05f, 0.06f, 0.08f, 0.94f);
+        Image background = EnsureImage(panel);
+        background.color = new Color(0.04f, 0.05f, 0.065f, 0.96f);
 
-        titleText = UIManager.CreateText(panel.transform, "Title", "Level Up", 32, TextAnchor.MiddleCenter);
-        SetRect(titleText.rectTransform, new Vector2(0f, 122f), new Vector2(450f, 48f));
+        titleText = GetOrCreateText(panel.transform, "Title", "Choose an Upgrade", 36, TextAnchor.MiddleCenter);
+        SetRect(titleText.rectTransform, new Vector2(0f, 160f), new Vector2(540f, 54f));
 
-        damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 48f));
-        fireRateButton = CreateChoiceButton("Fire Rate Button", new Vector2(0f, -36f));
-        moveSpeedButton = CreateChoiceButton("Move Speed Button", new Vector2(0f, -120f));
+        damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 78f));
+        fireRateButton = CreateChoiceButton("Fire Rate Button", new Vector2(0f, -30f));
+        moveSpeedButton = CreateChoiceButton("Move Speed Button", new Vector2(0f, -138f));
 
         panel.SetActive(false);
     }
 
     private Button CreateChoiceButton(string name, Vector2 position)
     {
-        GameObject buttonObject = new GameObject(name);
+        GameObject buttonObject = GetOrCreateChild(panel.transform, name);
         buttonObject.transform.SetParent(panel.transform, false);
 
-        RectTransform rect = buttonObject.AddComponent<RectTransform>();
-        SetRect(rect, position, new Vector2(400f, 64f));
+        RectTransform rect = EnsureRectTransform(buttonObject);
+        SetRect(rect, position, new Vector2(520f, 86f));
 
-        Image image = buttonObject.AddComponent<Image>();
-        image.color = new Color(0.18f, 0.32f, 0.42f);
+        Image image = EnsureImage(buttonObject);
+        image.color = new Color(0.14f, 0.25f, 0.31f, 0.98f);
 
-        Button button = buttonObject.AddComponent<Button>();
+        Button button = buttonObject.GetComponent<Button>();
+        if (button == null)
+        {
+            button = buttonObject.AddComponent<Button>();
+        }
         button.targetGraphic = image;
+        ColorBlock colors = button.colors;
+        colors.normalColor = new Color(0.14f, 0.25f, 0.31f, 0.98f);
+        colors.highlightedColor = new Color(0.23f, 0.43f, 0.52f, 1f);
+        colors.pressedColor = new Color(0.42f, 0.67f, 0.58f, 1f);
+        colors.selectedColor = colors.highlightedColor;
+        colors.disabledColor = new Color(0.12f, 0.12f, 0.12f, 0.65f);
+        button.colors = colors;
 
-        Text label = UIManager.CreateText(buttonObject.transform, "Label", "", 18, TextAnchor.MiddleCenter);
+        Text label = GetOrCreateText(buttonObject.transform, "Label", "", 22, TextAnchor.MiddleLeft);
         label.color = Color.white;
         RectTransform labelRect = label.rectTransform;
         labelRect.anchorMin = Vector2.zero;
         labelRect.anchorMax = Vector2.one;
-        labelRect.offsetMin = Vector2.zero;
-        labelRect.offsetMax = Vector2.zero;
+        labelRect.offsetMin = new Vector2(28f, 10f);
+        labelRect.offsetMax = new Vector2(-24f, -10f);
 
         return button;
     }
@@ -158,6 +170,60 @@ public class UpgradeManager : MonoBehaviour
         rect.pivot = new Vector2(0.5f, 0.5f);
         rect.anchoredPosition = position;
         rect.sizeDelta = size;
+    }
+
+    private static GameObject GetOrCreateChild(Transform parent, string name)
+    {
+        Transform existing = parent.Find(name);
+        if (existing != null)
+        {
+            return existing.gameObject;
+        }
+
+        GameObject child = new GameObject(name);
+        child.transform.SetParent(parent, false);
+        return child;
+    }
+
+    private static RectTransform EnsureRectTransform(GameObject target)
+    {
+        RectTransform rect = target.GetComponent<RectTransform>();
+        if (rect == null)
+        {
+            rect = target.AddComponent<RectTransform>();
+        }
+
+        return rect;
+    }
+
+    private static Image EnsureImage(GameObject target)
+    {
+        Image image = target.GetComponent<Image>();
+        if (image == null)
+        {
+            image = target.AddComponent<Image>();
+        }
+
+        return image;
+    }
+
+    private static Text GetOrCreateText(Transform parent, string name, string content, int fontSize, TextAnchor alignment)
+    {
+        GameObject target = GetOrCreateChild(parent, name);
+        Text text = target.GetComponent<Text>();
+        if (text == null)
+        {
+            EnsureRectTransform(target);
+            text = target.AddComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        }
+
+        text.text = content;
+        text.fontSize = fontSize;
+        text.alignment = alignment;
+        text.color = Color.white;
+        text.raycastTarget = false;
+        return text;
     }
 
     private static bool WasChoicePressed(int choice)

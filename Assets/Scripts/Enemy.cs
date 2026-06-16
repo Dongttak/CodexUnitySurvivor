@@ -21,7 +21,6 @@ public class Enemy : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Transform target;
     private float hitFlashTimer;
-    private Transform hpBarRoot;
     private SpriteRenderer hpBarBack;
     private SpriteRenderer hpBarFill;
     private bool active;
@@ -212,26 +211,30 @@ public class Enemy : MonoBehaviour
             spriteRenderer.color = baseColor;
         }
 
-        if (hpBarRoot != null)
+        Vector3 inverseVisualScale = Vector3.one / Mathf.Max(0.01f, visualSize);
+        if (hpBarBack != null)
         {
-            hpBarRoot.localPosition = new Vector3(0f, 0.62f, 0f);
-            hpBarRoot.localScale = Vector3.one / Mathf.Max(0.01f, visualSize);
+            hpBarBack.transform.localScale = inverseVisualScale;
+        }
+
+        if (hpBarFill != null)
+        {
+            hpBarFill.transform.localScale = inverseVisualScale;
         }
     }
 
     private void EnsureHpBar()
     {
-        if (hpBarRoot != null)
+        if (hpBarBack != null && hpBarFill != null)
         {
             return;
         }
 
         GameObject backObject = new GameObject("HP Bar Back");
         backObject.transform.SetParent(transform, false);
-        hpBarRoot = backObject.transform;
         hpBarBack = backObject.AddComponent<SpriteRenderer>();
         hpBarBack.sprite = PlaceholderSprites.Square;
-        hpBarBack.color = new Color(0f, 0f, 0f, 0.75f);
+        hpBarBack.color = new Color(0f, 0f, 0f, 0.62f);
         hpBarBack.sortingOrder = 11;
 
         GameObject fillObject = new GameObject("HP Bar Fill");
@@ -250,14 +253,19 @@ public class Enemy : MonoBehaviour
         }
 
         float ratio = Mathf.Clamp01(currentHealth / maxHealth);
-        const float width = 0.72f;
-        const float height = 0.07f;
+        bool shouldShow = ratio < 0.999f;
+        hpBarBack.enabled = shouldShow;
+        hpBarFill.enabled = shouldShow;
+
+        const float width = 0.58f;
+        const float height = 0.055f;
         Vector3 barPosition = new Vector3(0f, 0.62f, 0f);
+        Vector3 inverseVisualScale = Vector3.one / Mathf.Max(0.01f, visualSize);
 
         hpBarBack.transform.localPosition = barPosition;
-        hpBarBack.transform.localScale = new Vector3(width, height, 1f);
+        hpBarBack.transform.localScale = new Vector3(width * inverseVisualScale.x, height * inverseVisualScale.y, 1f);
         hpBarFill.transform.localPosition = barPosition + new Vector3(-(width * (1f - ratio)) * 0.5f, 0f, 0f);
-        hpBarFill.transform.localScale = new Vector3(width * ratio, height * 0.72f, 1f);
+        hpBarFill.transform.localScale = new Vector3(width * ratio * inverseVisualScale.x, height * 0.72f * inverseVisualScale.y, 1f);
         hpBarFill.color = Color.Lerp(new Color(1f, 0.18f, 0.12f, 0.9f), new Color(0.2f, 1f, 0.35f, 0.9f), ratio);
     }
 

@@ -5,8 +5,8 @@ public class DamageNumber : MonoBehaviour
 {
     private static readonly Queue<DamageNumber> Pool = new Queue<DamageNumber>();
 
-    [SerializeField] private float lifetime = 0.55f;
-    [SerializeField] private float riseSpeed = 1.1f;
+    [SerializeField] private float lifetime = 0.45f;
+    [SerializeField] private float riseSpeed = 0.95f;
 
     private TextMesh textMesh;
     private MeshRenderer meshRenderer;
@@ -25,8 +25,8 @@ public class DamageNumber : MonoBehaviour
         textMesh = gameObject.AddComponent<TextMesh>();
         textMesh.anchor = TextAnchor.MiddleCenter;
         textMesh.alignment = TextAlignment.Center;
-        textMesh.fontSize = 32;
-        textMesh.characterSize = 0.06f;
+        textMesh.fontSize = 28;
+        textMesh.characterSize = 0.052f;
 
         meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.sortingOrder = 20;
@@ -56,7 +56,7 @@ public class DamageNumber : MonoBehaviour
     public static void Spawn(Vector3 position, float damage)
     {
         DamageNumber number = Get();
-        number.transform.position = position + new Vector3(Random.Range(-0.12f, 0.12f), 0.45f, 0f);
+        number.transform.position = position + new Vector3(Random.Range(-0.1f, 0.1f), 0.42f, 0f);
         number.Configure(Mathf.CeilToInt(damage).ToString(), new Color(1f, 0.95f, 0.55f, 1f));
         number.gameObject.SetActive(true);
     }

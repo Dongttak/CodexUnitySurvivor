@@ -17,6 +17,7 @@
 - [ ] Select several upgrade types across separate level-ups or separate runs.
 - [ ] Confirm enemies spawn, chase, take damage, die, and drop XP.
 - [ ] Confirm HP, level, XP, and timer update while playing.
+- [ ] Confirm the start hint appears at the beginning and hides after a few seconds.
 - [ ] Let the player die and confirm game over appears.
 - [ ] Restart and confirm the run resets cleanly.
 - [ ] Stop Play Mode and check the Unity console for errors.
@@ -36,7 +37,8 @@
 - [ ] Projectiles travel fast enough to read as intentional shots.
 - [ ] Projectiles hit enemies and disappear on impact.
 - [ ] Floating damage numbers appear near enemies when projectiles hit.
-- [ ] Enemy HP bars appear above enemies and shrink after damage.
+- [ ] Enemy HP bars are hidden on full-health enemies, then appear and shrink after damage.
+- [ ] Damage numbers fade quickly enough that repeated hits do not cover the player.
 - [ ] Enemies flash or pulse when hit.
 - [ ] Enemies die after a small number of hits.
 - [ ] Enemy death pulse is visible without obscuring gameplay.
@@ -67,7 +69,9 @@
 ## Upgrade Checks
 
 - [ ] Level-up panel title is readable.
-- [ ] All three upgrade buttons fit inside the panel.
+- [ ] Level-up panel title says `Choose an Upgrade`.
+- [ ] All three card-like upgrade buttons fit inside the panel.
+- [ ] Each upgrade card shows a shortcut, upgrade name, and short description.
 - [ ] The three choices vary between level-ups and do not duplicate within the same panel.
 - [ ] `1` selects the first displayed upgrade.
 - [ ] `2` selects the second displayed upgrade.
@@ -91,6 +95,8 @@
 - [ ] HP decreases at a readable pace, not every frame instantly.
 - [ ] Player flashes or pulses when damaged.
 - [ ] Game over panel appears when HP reaches zero.
+- [ ] Game over panel shows survival time and final level.
+- [ ] Game over panel clearly shows the restart instruction.
 - [ ] Timer stops while game over is displayed.
 - [ ] Restart button reloads the run.
 - [ ] `R` reloads the run from game over.
@@ -100,10 +106,15 @@
 ## UI Readability Checks
 
 - [ ] HP text is readable during movement and combat.
+- [ ] HP bar fill changes when the player takes damage or heals.
 - [ ] Level text updates after leveling.
 - [ ] XP text uses the correct current and required values.
+- [ ] XP progress bar fills as XP is collected and resets after level-up.
 - [ ] Timer is readable in the top-right corner.
+- [ ] HUD panels improve contrast without covering the center of the playfield.
+- [ ] Start hint is readable but does not linger too long.
 - [ ] Level-up panel text does not overlap.
+- [ ] Upgrade cards remain readable at common Game view sizes.
 - [ ] Game over text and restart instruction are readable.
 - [ ] UI remains usable at common Game view sizes.
 
@@ -115,7 +126,7 @@
 - [ ] Hit and death pulses help clarify combat results.
 - [ ] XP pickup feels clear and rewarding.
 - [ ] Damage numbers are readable but do not clutter the screen heavily.
-- [ ] Enemy HP bars help show durability without covering the playfield.
+- [ ] Enemy HP bars help show durability only after enemies have been damaged.
 - [ ] Early game has enough breathing room to learn movement.
 - [ ] The first level-up happens soon enough to demonstrate the core loop.
 
@@ -129,6 +140,9 @@
 - Note whether movement speed upgrades become too fast after repeated picks.
 - Note whether projectile size or multi shot becomes visually cluttered.
 - Note whether damage numbers or HP bars become visually noisy with many enemies.
+- Note whether the HUD panels are too large or too transparent at your preferred Game view size.
+- Note whether the start hint duration feels too short or too long.
+- Note whether upgrade card descriptions are clear enough to choose quickly.
 - Note whether Fast enemies feel fair when they unlock around 1 minute.
 - Note whether Tank enemies feel too durable or too rewarding after 2 minutes.
 - Note whether XP Magnet makes collection too automatic too quickly.
@@ -154,6 +168,10 @@
 - Pooled damage numbers reusing stale text, alpha, or position.
 - Enemy HP bars failing to reset when pooled enemies are reused.
 - UI text missing because runtime UI construction failed.
+- HUD bars not filling or resetting correctly.
+- Start hint remaining visible for the whole run.
+- Upgrade card labels clipping at smaller Game view sizes.
+- Game over final level showing the wrong value.
 - Feedback pulses accumulating or lingering too long.
 
 ## Suggested Next Tasks After Manual Playtest

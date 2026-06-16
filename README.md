@@ -36,7 +36,9 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
 - Level-up presents 3 random non-duplicate upgrade choices from the available pool.
 - Enemy spawn interval ramps down over time.
 - Runtime HUD for HP, level, XP, and survival time.
-- Game over screen with restart.
+- Readable HUD panels with HP text/bar, XP text/bar, level, timer, and a short start hint.
+- Clearer level-up upgrade cards with names, descriptions, and `1`/`2`/`3` shortcuts.
+- Game over screen with survival time, final level, restart instruction, and restart button.
 - Conservative polish pass:
   - Clearer placeholder colors and sizing for player, enemies, projectiles, and XP.
   - Simple hit, death, projectile impact, and XP pickup pulse feedback.
@@ -50,6 +52,11 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Feedback pulses
   - Floating damage numbers
   - Enemies
+- UI/UX readability pass:
+  - Semi-transparent HUD panels keep stats readable without covering the center of combat.
+  - Enemy HP bars stay hidden on full-health enemies and appear after damage.
+  - Floating damage numbers are shorter-lived and slightly smaller to reduce clutter.
+  - A start hint explains movement and the core goal for first-time players.
 
 All visuals and sound effects are generated placeholders at runtime. No external art, audio, paid assets, or extra packages were added.
 

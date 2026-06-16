@@ -130,3 +130,23 @@ Optimization notes:
 - UI/HUD objects and core scene managers are not pooled because they are not hot combat allocations.
 
 Validation result: pass. Unity console returned no errors after compile and Play Mode validation.
+
+## 2026-06-16 - UI/UX Readability Pass 01
+
+- Created and switched to branch `ai-uiux-pass-01` from the current stable survivor MVP branch.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `list`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`.
+- Unity was initially in Play Mode from the previous session, so Play Mode was stopped before editing to avoid carrying runtime objects into the scene.
+- Updated `UIManager` to build and bind HUD elements idempotently, including existing scene UI objects when present.
+- Improved the HUD with semi-transparent panels, HP text plus HP bar, XP text plus XP progress bar, visible level text, and a cleaner survival timer panel.
+- Added a simple start hint: `Move: WASD / Arrow Keys` and `Survive, collect XP, and choose upgrades`; it fades/hides after a few seconds.
+- Improved the game-over panel with survival time, final level, restart instruction, and a larger restart button.
+- Updated `UpgradeManager` to reuse an existing upgrade panel when present and present three larger card-like choices with clearer names, descriptions, and `[1]`, `[2]`, `[3]` keyboard shortcut labels.
+- Reduced combat information clutter by making enemy HP bars hidden while enemies are at full health and slightly reducing floating damage number size/lifetime.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors.
+- Entered Play Mode through Hera and validated that HUD bars, start hint, upgrade panel, game-over panel, damage numbers, HP bars, projectile path, and XP orb path are present or functional.
+- Stopped Play Mode through Hera and rechecked the Unity console; no errors were returned.
+
+Known limitations:
+- UI remains built with runtime legacy uGUI placeholders rather than a custom art pass.
+- The start hint is a simple timed fade and does not adapt to controller or touch input.
+- The runtime probe validates UI/object presence and core paths, but final layout feel still needs manual Game view playtesting at the user's target resolution.
