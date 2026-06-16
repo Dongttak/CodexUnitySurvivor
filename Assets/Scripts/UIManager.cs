@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 #if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem.UI;
 #endif
 using UnityEngine.UI;
@@ -19,6 +22,8 @@ public class UIManager : MonoBehaviour
     private const int PauseDetailsFontSize = 28;
     private const int StatsTitleFontSize = 34;
     private const int StatsRowFontSize = 25;
+    private const int RuntimeStatsTitleFontSize = 26;
+    private const int RuntimeStatsRowFontSize = 22;
 
     private Text hpText;
     private Text levelText;
@@ -33,9 +38,12 @@ public class UIManager : MonoBehaviour
     private Text pauseTitleText;
     private Text pauseDetailsText;
     private Text statsText;
+    private GameObject runtimeStatsPanel;
+    private Text runtimeStatsText;
     private Text startHintText;
     private CanvasGroup startHintGroup;
     private float startHintTimer;
+    private float statsRefreshTimer;
 
     private void Awake()
     {
@@ -44,10 +52,18 @@ public class UIManager : MonoBehaviour
         BuildHud();
         BuildGameOverPanel();
         BuildPausePanel();
+        BuildRuntimeStatsPanel();
     }
 
     private void Update()
     {
+        if (WasStatsTogglePressed() && CanToggleRuntimeStats())
+        {
+            ToggleRuntimeStats();
+        }
+
+        UpdateRuntimeStatsIfNeeded();
+
         if (startHintGroup == null || !startHintGroup.gameObject.activeSelf)
         {
             if (pausePanel != null && pausePanel.activeSelf)
@@ -231,6 +247,15 @@ public class UIManager : MonoBehaviour
         {
             UpdateStatsText();
             pausePanel.SetActive(true);
+        }
+    }
+
+    private void ToggleRuntimeStats()
+    {
+        if (runtimeStatsPanel != null)
+        {
+            runtimeStatsPanel.SetActive(!runtimeStatsPanel.activeSelf);
+            UpdateRuntimeStatsText();
         }
     }
 
@@ -494,12 +519,48 @@ public class UIManager : MonoBehaviour
         startHintTimer = 0f;
         hint.SetActive(true);
 
-        startHintText = GetOrCreateText(hint.transform, "Hint Text", "Move: WASD / Arrow Keys    Pause: Esc / P\nChoose Upgrade: 1 / 2 / 3 or Click", StartHintFontSize, TextAnchor.MiddleCenter);
+        startHintText = GetOrCreateText(hint.transform, "Hint Text", "Move: WASD / Arrow Keys    Pause: Esc / P    Tab: Stats\nChoose Upgrade: 1 / 2 / 3 or Click", StartHintFontSize, TextAnchor.MiddleCenter);
         RectTransform textRect = startHintText.rectTransform;
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
         textRect.offsetMin = new Vector2(18f, 8f);
         textRect.offsetMax = new Vector2(-18f, -8f);
+    }
+
+    private void BuildRuntimeStatsPanel()
+    {
+        Canvas canvas = EnsureCanvas();
+        Transform existingHud = canvas.transform.Find("HUD");
+        Transform parent = existingHud != null ? existingHud : canvas.transform;
+        runtimeStatsPanel = EnsurePanel(parent, "Runtime Stats Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-24f, 0f), new Vector2(330f, 292f), new Color(0.02f, 0.025f, 0.035f, 0.82f));
+
+        Text title = GetOrCreateText(runtimeStatsPanel.transform, "Stats Title", "Player Stats", RuntimeStatsTitleFontSize, TextAnchor.UpperCenter);
+        RectTransform titleRect = title.rectTransform;
+        titleRect.anchorMin = new Vector2(0f, 1f);
+        titleRect.anchorMax = new Vector2(1f, 1f);
+        titleRect.pivot = new Vector2(0.5f, 1f);
+        titleRect.anchoredPosition = new Vector2(0f, -12f);
+        titleRect.sizeDelta = new Vector2(-28f, 34f);
+
+        Text hint = GetOrCreateText(runtimeStatsPanel.transform, "Stats Hint", "Tab: Stats", 18, TextAnchor.UpperRight);
+        RectTransform hintRect = hint.rectTransform;
+        hintRect.anchorMin = new Vector2(0f, 1f);
+        hintRect.anchorMax = new Vector2(1f, 1f);
+        hintRect.pivot = new Vector2(1f, 1f);
+        hintRect.anchoredPosition = new Vector2(-14f, -44f);
+        hintRect.sizeDelta = new Vector2(-28f, 24f);
+        hint.color = new Color(0.72f, 0.82f, 0.88f);
+
+        runtimeStatsText = GetOrCreateText(runtimeStatsPanel.transform, "Stats Text", "", RuntimeStatsRowFontSize, TextAnchor.UpperLeft);
+        RectTransform statsRect = runtimeStatsText.rectTransform;
+        statsRect.anchorMin = Vector2.zero;
+        statsRect.anchorMax = Vector2.one;
+        statsRect.offsetMin = new Vector2(20f, 18f);
+        statsRect.offsetMax = new Vector2(-20f, -74f);
+        runtimeStatsText.color = new Color(0.9f, 0.96f, 1f);
+
+        runtimeStatsPanel.SetActive(true);
+        UpdateRuntimeStatsText();
     }
 
     private static GameObject EnsurePanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 anchoredPosition, Vector2 size, Color color)
@@ -557,6 +618,89 @@ public class UIManager : MonoBehaviour
         text.color = Color.white;
         text.raycastTarget = false;
         return text;
+    }
+
+    private void UpdateRuntimeStatsIfNeeded()
+    {
+        if (runtimeStatsPanel == null || !runtimeStatsPanel.activeSelf)
+        {
+            return;
+        }
+
+        statsRefreshTimer -= Time.unscaledDeltaTime;
+        if (statsRefreshTimer > 0f)
+        {
+            return;
+        }
+
+        statsRefreshTimer = 0.25f;
+        UpdateRuntimeStatsText();
+    }
+
+    private void UpdateRuntimeStatsText()
+    {
+        if (runtimeStatsText == null)
+        {
+            return;
+        }
+
+        runtimeStatsText.text = BuildCompactStatsText();
+    }
+
+    private string BuildCompactStatsText()
+    {
+        AutoWeapon weapon = FindFirstObjectByType<AutoWeapon>();
+        PlayerController playerController = FindFirstObjectByType<PlayerController>();
+        PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
+        LevelSystem levelSystem = FindFirstObjectByType<LevelSystem>();
+        GameManager gameManager = GameManager.Instance;
+
+        string hp = playerHealth == null ? "-- / --" : $"{Mathf.CeilToInt(playerHealth.CurrentHealth)} / {Mathf.CeilToInt(playerHealth.MaxHealth)}";
+        string damage = weapon == null ? "--" : weapon.Damage.ToString("0.0");
+        string fireRate = weapon == null ? "--" : $"{weapon.FireRate:0.00}/s";
+        string moveSpeed = playerController == null ? "--" : playerController.MoveSpeed.ToString("0.0");
+        string projectileSize = weapon == null ? "--" : $"{weapon.ProjectileSize:0.00}x";
+        string projectileCount = weapon == null ? "--" : weapon.ProjectileCount.ToString();
+        string xpMagnet = XPOrb.CurrentAttractionRadius.ToString("0.0");
+        string level = levelSystem == null ? "--" : levelSystem.CurrentLevel.ToString();
+        string survivalTime = "--:--";
+        if (gameManager != null)
+        {
+            int minutes = Mathf.FloorToInt(gameManager.SurvivalTime / 60f);
+            int seconds = Mathf.FloorToInt(gameManager.SurvivalTime % 60f);
+            survivalTime = $"{minutes:00}:{seconds:00}";
+        }
+
+        return
+            $"HP     {hp}\n" +
+            $"DMG    {damage}\n" +
+            $"Rate   {fireRate}\n" +
+            $"Speed  {moveSpeed}\n" +
+            $"Size   {projectileSize}\n" +
+            $"Shots  {projectileCount}\n" +
+            $"Magnet {xpMagnet}\n" +
+            $"Lv/Time {level} / {survivalTime}";
+    }
+
+    private static bool CanToggleRuntimeStats()
+    {
+        GameObject upgradePanel = GameObject.Find("Upgrade Panel");
+        bool upgradeVisible = upgradePanel != null && upgradePanel.activeSelf;
+        GameObject pause = GameObject.Find("Pause Panel");
+        bool pauseVisible = pause != null && pause.activeSelf;
+        GameObject gameOver = GameObject.Find("Game Over Panel");
+        bool gameOverVisible = gameOver != null && gameOver.activeSelf;
+        return !upgradeVisible && !pauseVisible && !gameOverVisible;
+    }
+
+    private static bool WasStatsTogglePressed()
+    {
+#if ENABLE_INPUT_SYSTEM
+        Keyboard keyboard = Keyboard.current;
+        return keyboard != null && keyboard.tabKey.wasPressedThisFrame;
+#else
+        return Input.GetKeyDown(KeyCode.Tab);
+#endif
     }
 
     private static void HideLegacyDirectHudText(Transform hud)

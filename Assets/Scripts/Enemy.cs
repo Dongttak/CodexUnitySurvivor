@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Transform target;
     private float hitFlashTimer;
+    private SpriteRenderer hpBarBorder;
     private SpriteRenderer hpBarBack;
     private SpriteRenderer hpBarFill;
     private bool active;
@@ -131,6 +132,7 @@ public class Enemy : MonoBehaviour
 
         currentHealth -= amount;
         hitFlashTimer = 0.08f;
+        UpdateHpBar();
         DamageNumber.Spawn(transform.position, amount);
         FeedbackEffect.SpawnPulse(transform.position, new Color(1f, 0.85f, 0.25f, 0.55f), 0.35f, 0.75f, 0.16f, 8);
         if (AudioManager.Instance != null)
@@ -212,6 +214,11 @@ public class Enemy : MonoBehaviour
         }
 
         Vector3 inverseVisualScale = Vector3.one / Mathf.Max(0.01f, visualSize);
+        if (hpBarBorder != null)
+        {
+            hpBarBorder.transform.localScale = inverseVisualScale;
+        }
+
         if (hpBarBack != null)
         {
             hpBarBack.transform.localScale = inverseVisualScale;
@@ -225,16 +232,23 @@ public class Enemy : MonoBehaviour
 
     private void EnsureHpBar()
     {
-        if (hpBarBack != null && hpBarFill != null)
+        if (hpBarBorder != null && hpBarBack != null && hpBarFill != null)
         {
             return;
         }
+
+        GameObject borderObject = new GameObject("HP Bar Border");
+        borderObject.transform.SetParent(transform, false);
+        hpBarBorder = borderObject.AddComponent<SpriteRenderer>();
+        hpBarBorder.sprite = PlaceholderSprites.Square;
+        hpBarBorder.color = new Color(0f, 0f, 0f, 0.9f);
+        hpBarBorder.sortingOrder = 10;
 
         GameObject backObject = new GameObject("HP Bar Back");
         backObject.transform.SetParent(transform, false);
         hpBarBack = backObject.AddComponent<SpriteRenderer>();
         hpBarBack.sprite = PlaceholderSprites.Square;
-        hpBarBack.color = new Color(0f, 0f, 0f, 0.62f);
+        hpBarBack.color = new Color(0.05f, 0.055f, 0.065f, 0.86f);
         hpBarBack.sortingOrder = 11;
 
         GameObject fillObject = new GameObject("HP Bar Fill");
@@ -253,26 +267,41 @@ public class Enemy : MonoBehaviour
         }
 
         float ratio = Mathf.Clamp01(currentHealth / maxHealth);
-        bool shouldShow = ratio < 0.999f;
+        bool shouldShow = ratio < 0.999f || enemyTypeName == "Tank";
+        hpBarBorder.enabled = shouldShow;
         hpBarBack.enabled = shouldShow;
         hpBarFill.enabled = shouldShow;
 
-        const float width = 0.58f;
-        const float height = 0.055f;
-        Vector3 barPosition = new Vector3(0f, 0.62f, 0f);
+        const float width = 1.25f;
+        const float height = 0.13f;
+        Vector3 barPosition = new Vector3(0f, 0.82f, 0f);
         Vector3 inverseVisualScale = Vector3.one / Mathf.Max(0.01f, visualSize);
 
+        hpBarBorder.transform.localPosition = barPosition;
+        hpBarBorder.transform.localScale = new Vector3((width + 0.12f) * inverseVisualScale.x, (height + 0.07f) * inverseVisualScale.y, 1f);
         hpBarBack.transform.localPosition = barPosition;
         hpBarBack.transform.localScale = new Vector3(width * inverseVisualScale.x, height * inverseVisualScale.y, 1f);
         hpBarFill.transform.localPosition = barPosition + new Vector3(-(width * (1f - ratio)) * 0.5f, 0f, 0f);
-        hpBarFill.transform.localScale = new Vector3(width * ratio * inverseVisualScale.x, height * 0.72f * inverseVisualScale.y, 1f);
-        hpBarFill.color = Color.Lerp(new Color(1f, 0.18f, 0.12f, 0.9f), new Color(0.2f, 1f, 0.35f, 0.9f), ratio);
+        hpBarFill.transform.localScale = new Vector3(width * ratio * inverseVisualScale.x, height * 0.68f * inverseVisualScale.y, 1f);
+        hpBarFill.color = Color.Lerp(new Color(1f, 0.16f, 0.1f, 0.98f), new Color(0.18f, 1f, 0.42f, 0.98f), ratio);
     }
 
     private void Release()
     {
         active = false;
         target = null;
+        if (hpBarBorder != null)
+        {
+            hpBarBorder.enabled = false;
+        }
+        if (hpBarBack != null)
+        {
+            hpBarBack.enabled = false;
+        }
+        if (hpBarFill != null)
+        {
+            hpBarFill.enabled = false;
+        }
         gameObject.SetActive(false);
         Pool.Enqueue(this);
     }

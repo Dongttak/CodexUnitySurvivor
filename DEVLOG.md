@@ -189,3 +189,26 @@ Known limitations:
 Known limitations:
 - Stats are visible in the pause menu only; no live `Tab` overlay was added in this pass.
 - Active enemy count is gathered only while the pause stats panel is visible, so it is acceptable for the MVP but not a full combat telemetry system.
+
+## 2026-06-16 - 4K HP Bar And Runtime Stats UI Pass 01
+
+- Created and switched to branch `ai-uiux-4k-hp-stats-pass-01` from `ai-uiux-stats-damage-pass-01`.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`; Unity was connected, `SampleScene` was clean, and console errors were empty.
+- Reviewed `Enemy`, `UIManager`, `GameManager`, `AutoWeapon`, `PlayerHealth`, `PlayerController`, `LevelSystem`, `XPOrb`, and `EnemySpawner` before editing.
+- Addressed manual playtest feedback that enemy HP bars were still too small on a high-resolution/4K display, stats needed to be visible without pressing `Esc`, and the UI needed to feel more intentional.
+- Increased enemy HP bar world-space sizing from width `0.58` and height `0.055` to width `1.25` and height `0.13`, with a larger black border/backplate and higher-contrast fill.
+- Moved enemy HP bars upward from local Y `0.62` to `0.82` so larger bars sit above the enemy body.
+- HP bar visibility behavior: damaged enemies show HP bars; Tank enemies show HP bars even at full health; Basic/Fast enemies stay clean until damaged.
+- Added immediate HP bar refresh inside `Enemy.TakeDamage` so newly damaged enemies show the bar immediately instead of waiting for the next `Update`.
+- Confirmed pooled enemy HP bars reset on death/despawn by disabling border, back, and fill renderers in `Release`.
+- Added a compact runtime stats panel on the right side of the HUD, visible by default for prototype playtesting and toggleable with `Tab`.
+- Runtime stats show HP, damage, fire rate, move speed, projectile size, shot count, XP magnet range, level, and survival time.
+- Kept the full pause-menu stats from the previous pass; pause stats and runtime stats use the same stat sources for consistency.
+- Runtime stats refresh at a low frequency while visible rather than doing expensive work every frame.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors.
+- Entered Play Mode through Hera and validated damaged HP bar visibility, Tank full-health HP bar visibility, pooled HP bar reset after death, runtime stats visibility, `Tab` toggle behavior, pause stats, level-up UI, and game-over UI.
+- Stopped Play Mode through Hera and rechecked the Unity console; no errors were returned.
+
+Known limitations:
+- Enemy HP bars remain world-space SpriteRenderer bars rather than screen-space UI; this is simpler and stable, but manual review at `3840x2160` is still needed.
+- The compact runtime stats panel is intentionally visible by default for development/testing and can cover a small right-side area until toggled off with `Tab`.

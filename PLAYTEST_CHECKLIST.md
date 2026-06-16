@@ -8,7 +8,8 @@
 4. Move with `WASD` or arrow keys.
 5. Choose level-up upgrades by clicking a button or pressing `1`, `2`, or `3`.
 6. Pause/resume with `Esc` or `P`.
-7. After game over, restart with the Restart button or `R`.
+7. Toggle compact stats with `Tab`.
+8. After game over, restart with the Restart button or `R`.
 
 ## 5-Minute Manual Playtest
 
@@ -18,6 +19,8 @@
 - [ ] Select several upgrade types across separate level-ups or separate runs.
 - [ ] Confirm enemies spawn, chase, take damage, die, and drop XP.
 - [ ] Confirm HP, level, XP, and timer update while playing.
+- [ ] Confirm the compact runtime stats panel is visible by default.
+- [ ] Toggle the compact stats panel off and on with `Tab`.
 - [ ] Confirm the start hint appears at the beginning and hides after a few seconds.
 - [ ] Pause and resume once with `Esc` or `P`.
 - [ ] Let the player die and confirm game over appears.
@@ -43,6 +46,12 @@
 - [ ] Damage numbers are still readable at `1280x720`.
 - [ ] Damage numbers have enough contrast against enemies and the background.
 - [ ] Enemy HP bars are hidden on full-health enemies, then appear and shrink after damage.
+- [ ] Enemy HP bars are readable at `1920x1080`.
+- [ ] Enemy HP bars are readable at `2560x1440`.
+- [ ] Enemy HP bars are readable at `3840x2160`.
+- [ ] Tank enemies show HP bars even before taking damage.
+- [ ] Basic and Fast enemy HP bars appear immediately after damage.
+- [ ] Enemy HP bars reset and hide correctly when pooled enemies die and later respawn.
 - [ ] Damage numbers fade quickly enough that repeated hits do not cover the player.
 - [ ] Enemies flash or pulse when hit.
 - [ ] Enemies die after a small number of hits.
@@ -111,6 +120,7 @@
 - [ ] Pause stats include HP, level, XP, damage, fire rate, move speed, projectile size, multi-shot count, XP magnet range, survival time, and active enemies.
 - [ ] Pause stats update after taking damage or collecting XP.
 - [ ] Pause stats reflect upgrades after choosing damage, fire rate, move speed, projectile size, multi shot, XP magnet, max HP, or heal.
+- [ ] Pause stats match the compact runtime stats for shared values.
 - [ ] Pause panel does not appear on top of the level-up panel.
 - [ ] Pause input does not resume gameplay after game over.
 
@@ -133,6 +143,8 @@
 
 - [ ] CanvasScaler is set to Scale With Screen Size with a `1920x1080` reference resolution.
 - [ ] At `1920x1080`, HUD, timer, start hint, upgrade panel, pause panel, and game-over panel are readable.
+- [ ] At `2560x1440`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel are readable.
+- [ ] At `3840x2160`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel are readable.
 - [ ] At `1280x720`, HUD, timer, start hint, upgrade panel, pause panel, and game-over panel are still readable.
 - [ ] HP text is readable during movement and combat.
 - [ ] HP bar fill changes when the player takes damage or heals.
@@ -142,7 +154,13 @@
 - [ ] Timer is readable in the top-right corner.
 - [ ] HUD panels improve contrast without covering the center of the playfield.
 - [ ] Start hint includes movement, pause, and upgrade-selection controls.
+- [ ] Start hint includes `Tab: Stats`.
 - [ ] Start hint is readable but does not linger too long.
+- [ ] Runtime stats panel appears on the right side and does not cover center combat.
+- [ ] Runtime stats panel shows HP, damage, fire rate, move speed, projectile size, shot count, XP magnet range, level, and survival time.
+- [ ] Runtime stats update during gameplay after damage, upgrades, and time passing.
+- [ ] `Tab` hides and shows the runtime stats panel.
+- [ ] `Tab` does not break level-up, pause, or game-over UI.
 - [ ] Level-up panel text does not overlap.
 - [ ] Upgrade cards remain readable at common Game view sizes.
 - [ ] Game over text and restart instruction are readable.
@@ -160,6 +178,7 @@
 - [ ] Damage numbers are readable but do not clutter the screen heavily.
 - [ ] Damage number shadow improves readability without looking too heavy.
 - [ ] Enemy HP bars help show durability only after enemies have been damaged.
+- [ ] Larger HP bars improve enemy durability feedback without cluttering basic early fights.
 - [ ] Early game has enough breathing room to learn movement.
 - [ ] The first level-up happens soon enough to demonstrate the core loop.
 
@@ -173,6 +192,8 @@
 - Note whether movement speed upgrades become too fast after repeated picks.
 - Note whether projectile size or multi shot becomes visually cluttered.
 - Note whether damage numbers or HP bars become visually noisy with many enemies.
+- Note whether the larger HP bars are readable on your 4K display without feeling oversized.
+- Note whether always-visible stats are useful during combat or should default hidden later.
 - Note whether damage numbers are now large enough during real combat.
 - Note whether pause-menu stats are useful or should later become a toggleable HUD panel.
 - Note whether the HUD panels are too large or too transparent at your preferred Game view size.
@@ -211,7 +232,12 @@
 - Pooled damage numbers reusing stale scale, font size, or shadow color.
 - Pause stats showing stale values after upgrades or damage.
 - Pause stats layout clipping at `1280x720`.
+- Runtime stats showing stale values after upgrades or damage.
+- Runtime stats panel covering too much playfield.
+- `Tab` toggle not responding or interfering with other UI states.
 - Enemy HP bars failing to reset when pooled enemies are reused.
+- Tank HP bars not visible at full health.
+- Basic/Fast HP bars not appearing immediately after damage.
 - UI text missing because runtime UI construction failed.
 - HUD bars not filling or resetting correctly.
 - Start hint remaining visible for the whole run.
