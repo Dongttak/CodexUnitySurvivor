@@ -25,7 +25,10 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
 - Camera follow.
 - Enemy spawning around the player.
 - Basic, Fast, and Tank enemies spawn over time, chase the player, and damage on contact.
-- Automatic nearest-enemy projectile attacks.
+- Automatic nearest-enemy projectile attacks through the starting `Basic Bolt` weapon.
+- Unlockable weapon variety:
+  - `Aura Pulse`: periodically damages nearby enemies with a visible area pulse.
+  - `Orbit Blade`: creates a small orbiting blade that damages enemies it touches.
 - Projectile damage, enemy death, and XP orb drops.
 - Large high-contrast floating damage numbers and larger enemy HP bars for combat readability.
 - XP collection and level-ups.
@@ -38,7 +41,10 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Projectile size
   - XP magnet
   - Multi shot
+  - Unlock Aura Pulse
+  - Unlock Orbit Blade
 - Level-up presents 3 random non-duplicate upgrade choices from the available pool.
+- Weapon unlock upgrades appear only while that weapon is still locked.
 - Enemy spawn interval ramps down over time.
 - Runtime HUD for HP, level, XP, and survival time.
 - Readable HUD panels with HP text/bar, XP text/bar, level, timer, and a short start hint.
@@ -71,7 +77,7 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Floating damage numbers use larger world-space text, a longer readable lifetime, and a dark shadow.
   - A start hint explains movement, pause, and upgrade selection for first-time players.
   - Pause menu stats show HP, level, XP, damage, fire rate, move speed, projectile size, multi-shot count, XP magnet range, survival time, and active enemies.
-  - Runtime stats HUD shows key combat stats during gameplay: HP, damage, fire rate, move speed, projectile size, shot count, XP magnet range, level, and survival time.
+  - Runtime stats HUD shows key combat stats during gameplay: HP, damage, fire rate, move speed, projectile size, shot count, XP magnet range, weapon unlock state, level, and survival time.
   - Enemy HP bars are larger for high-resolution displays, with a dark border/backplate and high-contrast fill; damaged enemies show bars, and Tank enemies show bars even at full HP.
 
 All visuals and sound effects are generated placeholders at runtime. No external art, audio, paid assets, or extra packages were added.
@@ -102,6 +108,14 @@ Enemy availability changes over time:
 - `0:00` Basic only.
 - `1:00` mostly Basic, some Fast.
 - `2:00+` Basic, Fast, and Tank.
+
+## Weapon Variety
+
+- `Basic Bolt`: the starting auto-fire projectile weapon. It targets the nearest enemy and continues to use projectile pooling, Damage Up, Fire Rate Up, Projectile Size Up, Multi Shot, damage numbers, HP bars, and SFX.
+- `Aura Pulse`: unlocked from level-up choices. It pulses around the player every few seconds, damages enemies in its radius, uses the existing pooled feedback pulse visual, and triggers existing procedural SFX through normal hit/shoot paths.
+- `Orbit Blade`: unlocked from level-up choices. It creates a small orbiting placeholder blade around the player; enemies touching it take periodic damage with a short per-enemy cooldown.
+
+Aura Pulse and Orbit Blade unlock choices stop appearing after their weapon is acquired.
 
 ## Scene Setup
 

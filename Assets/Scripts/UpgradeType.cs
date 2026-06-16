@@ -7,5 +7,7 @@ public enum UpgradeType
     Heal,
     ProjectileSize,
     XPMagnet,
-    MultiShot
+    MultiShot,
+    UnlockAuraPulse,
+    UnlockOrbitBlade
 }

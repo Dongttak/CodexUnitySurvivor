@@ -19,6 +19,7 @@ public class LevelSystem : MonoBehaviour
 
     private PlayerController playerController;
     private AutoWeapon autoWeapon;
+    private WeaponController weaponController;
     private UpgradeManager upgradeManager;
     private bool choosingUpgrade;
 
@@ -47,6 +48,7 @@ public class LevelSystem : MonoBehaviour
     {
         playerController = FindFirstObjectByType<PlayerController>();
         autoWeapon = FindFirstObjectByType<AutoWeapon>();
+        EnsureWeaponController();
         upgradeManager = FindFirstObjectByType<UpgradeManager>();
 
         OnLevelChanged?.Invoke(currentLevel);
@@ -120,6 +122,18 @@ public class LevelSystem : MonoBehaviour
                     autoWeapon.IncreaseProjectileCount(multiShotUpgradeAmount);
                 }
                 break;
+            case UpgradeType.UnlockAuraPulse:
+                if (EnsureWeaponController() != null)
+                {
+                    weaponController.UnlockAuraPulse();
+                }
+                break;
+            case UpgradeType.UnlockOrbitBlade:
+                if (EnsureWeaponController() != null)
+                {
+                    weaponController.UnlockOrbitBlade();
+                }
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(upgradeType), upgradeType, null);
         }
@@ -182,9 +196,9 @@ public class LevelSystem : MonoBehaviour
         return choices;
     }
 
-    private static List<UpgradeChoice> BuildUpgradePool()
+    private List<UpgradeChoice> BuildUpgradePool()
     {
-        return new List<UpgradeChoice>
+        List<UpgradeChoice> pool = new List<UpgradeChoice>
         {
             new UpgradeChoice(UpgradeType.ProjectileDamage, "Sharper Projectiles", "More damage per hit"),
             new UpgradeChoice(UpgradeType.FireRate, "Faster Casting", "Shoot a little more often"),
@@ -195,5 +209,41 @@ public class LevelSystem : MonoBehaviour
             new UpgradeChoice(UpgradeType.XPMagnet, "XP Magnet", "Pull XP orbs from farther away"),
             new UpgradeChoice(UpgradeType.MultiShot, "Multi Shot", "Fire one additional projectile per attack")
         };
+
+        if (weaponController != null && !weaponController.HasAuraPulse)
+        {
+            pool.Add(new UpgradeChoice(UpgradeType.UnlockAuraPulse, "Unlock Aura Pulse", "Periodic area pulse damages nearby enemies"));
+        }
+
+        if (weaponController != null && !weaponController.HasOrbitBlade)
+        {
+            pool.Add(new UpgradeChoice(UpgradeType.UnlockOrbitBlade, "Unlock Orbit Blade", "A rotating blade damages enemies it touches"));
+        }
+
+        return pool;
+    }
+
+    private WeaponController EnsureWeaponController()
+    {
+        if (weaponController != null)
+        {
+            return weaponController;
+        }
+
+        weaponController = FindFirstObjectByType<WeaponController>();
+        if (weaponController == null)
+        {
+            if (playerController == null)
+            {
+                playerController = FindFirstObjectByType<PlayerController>();
+            }
+
+            if (playerController != null)
+            {
+                weaponController = playerController.gameObject.AddComponent<WeaponController>();
+            }
+        }
+
+        return weaponController;
     }
 }

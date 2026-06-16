@@ -19,6 +19,7 @@
 - [ ] Reach at least level 2.
 - [ ] Select several upgrade types across separate level-ups or separate runs.
 - [ ] Confirm enemies spawn, chase, take damage, die, and drop XP.
+- [ ] Confirm Basic Bolt still auto-fires at the nearest enemy.
 - [ ] Confirm HP, level, XP, and timer update while playing.
 - [ ] Confirm the compact runtime stats panel is visible by default.
 - [ ] Toggle the compact stats panel off and on with `Tab`.
@@ -41,6 +42,7 @@
 ## Combat Checks
 
 - [ ] Player automatically fires only when enemies are nearby.
+- [ ] Basic Bolt still uses visible pooled projectiles.
 - [ ] Projectiles are visible against the background.
 - [ ] Projectiles travel fast enough to read as intentional shots.
 - [ ] Projectiles hit enemies and disappear on impact.
@@ -106,7 +108,30 @@
 - [ ] Multi Shot adds one projectile per attack.
 - [ ] Multi Shot still works after Projectile Size Up, and the larger pooled projectiles reset correctly between shots.
 - [ ] Upgrade selection plays a short procedural SFX.
+- [ ] `Unlock Aura Pulse` can appear as one of the three level-up choices while Aura Pulse is locked.
+- [ ] `Unlock Orbit Blade` can appear as one of the three level-up choices while Orbit Blade is locked.
+- [ ] Unlocking Aura Pulse adds the weapon and the unlock choice does not appear again in later level-ups.
+- [ ] Unlocking Orbit Blade adds the weapon and the unlock choice does not appear again in later level-ups.
 - [ ] Pressing `Esc` or `P` while the level-up panel is visible does not hide the level-up panel or resume gameplay.
+
+## Weapon Variety Checks
+
+- [ ] Basic Bolt continues to target the nearest enemy.
+- [ ] Basic Bolt still works with Damage Up.
+- [ ] Basic Bolt still works with Fire Rate Up.
+- [ ] Basic Bolt still works with Projectile Size Up.
+- [ ] Basic Bolt still works with Multi Shot.
+- [ ] Aura Pulse unlock creates periodic visible pulses around the player.
+- [ ] Aura Pulse damages multiple enemies within its radius.
+- [ ] Aura Pulse hit enemies show damage numbers and HP bar updates.
+- [ ] Aura Pulse does not fire while paused, choosing upgrades, or game over.
+- [ ] Orbit Blade unlock creates a small orbiting blade around the player.
+- [ ] Orbit Blade damages enemies it touches.
+- [ ] Orbit Blade damage has a readable tick pace and does not melt enemies instantly.
+- [ ] Orbit Blade hit enemies show damage numbers and HP bar updates.
+- [ ] Orbit Blade does not move or deal damage while paused, choosing upgrades, or game over.
+- [ ] Aura Pulse and Orbit Blade can both be unlocked in the same run.
+- [ ] Weapon visuals remain readable without covering the player.
 
 ## Pause Checks
 
@@ -120,7 +145,7 @@
 - [ ] Pause panel title `Paused` is large and readable.
 - [ ] Pause panel instruction says `Press Esc or P to resume`.
 - [ ] Pause panel shows a readable `Current Stats` section.
-- [ ] Pause stats include HP, level, XP, damage, fire rate, move speed, projectile size, multi-shot count, XP magnet range, survival time, and active enemies.
+- [ ] Pause stats include HP, level, XP, damage, fire rate, move speed, projectile size, multi-shot count, XP magnet range, weapon unlock state, survival time, and active enemies.
 - [ ] Pause stats update after taking damage or collecting XP.
 - [ ] Pause stats reflect upgrades after choosing damage, fire rate, move speed, projectile size, multi shot, XP magnet, max HP, or heal.
 - [ ] Pause stats match the compact runtime stats for shared values.
@@ -167,7 +192,7 @@
 - [ ] Start hint includes `Tab: Stats`.
 - [ ] Start hint is readable but does not linger too long.
 - [ ] Runtime stats panel appears on the right side and does not cover center combat.
-- [ ] Runtime stats panel shows HP, damage, fire rate, move speed, projectile size, shot count, XP magnet range, level, and survival time.
+- [ ] Runtime stats panel shows HP, damage, fire rate, move speed, projectile size, shot count, XP magnet range, Aura Pulse state, Orbit Blade state, level, and survival time.
 - [ ] Runtime stats update during gameplay after damage, upgrades, and time passing.
 - [ ] `Tab` hides and shows the runtime stats panel.
 - [ ] `Tab` does not break level-up, pause, or game-over UI.
@@ -214,6 +239,9 @@
 - Note whether the spawn ramp feels fair at 1, 3, and 5 minutes.
 - Note whether movement speed upgrades become too fast after repeated picks.
 - Note whether projectile size or multi shot becomes visually cluttered.
+- Note whether Aura Pulse visual size is readable without hiding enemies.
+- Note whether Orbit Blade is easy to see while moving through crowds.
+- Note whether weapon unlock choices appear too early, too late, or too often.
 - Note whether damage numbers or HP bars become visually noisy with many enemies.
 - Note whether the larger HP bars are readable on your 4K display without feeling oversized.
 - Note whether always-visible stats are useful during combat or should default hidden later.
@@ -244,6 +272,11 @@
 - Upgrade buttons or number keys not responding.
 - Duplicate upgrade choices appearing in a single level-up panel.
 - New upgrades appearing in UI but not changing gameplay.
+- Weapon unlock choices repeating after the weapon is already unlocked.
+- Aura Pulse unlocked but never pulsing.
+- Aura Pulse pulse visible but not damaging enemies inside the radius.
+- Orbit Blade unlocked but no blade appears.
+- Orbit Blade damaging enemies too rapidly or not at all.
 - Game over panel not appearing.
 - Pause panel not appearing when `Esc` or `P` is pressed.
 - Pause leaving gameplay running in the background.

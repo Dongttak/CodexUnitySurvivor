@@ -433,6 +433,7 @@ public class UIManager : MonoBehaviour
         PlayerController playerController = FindFirstObjectByType<PlayerController>();
         PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
         LevelSystem levelSystem = FindFirstObjectByType<LevelSystem>();
+        WeaponController weaponController = FindFirstObjectByType<WeaponController>();
         GameManager gameManager = GameManager.Instance;
 
         string survivalTime = "00:00";
@@ -452,13 +453,16 @@ public class UIManager : MonoBehaviour
         string projectileSize = weapon == null ? "--" : $"{weapon.ProjectileSize:0.00}x";
         string projectileCount = weapon == null ? "--" : weapon.ProjectileCount.ToString();
         string xpMagnet = XPOrb.CurrentAttractionRadius.ToString("0.0");
+        string aura = BuildAuraStats(weaponController);
+        string orbit = BuildOrbitStats(weaponController);
         int activeEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length;
 
         statsText.text =
             $"HP: {hp}        Level: {level}        XP: {xp}\n" +
             $"Damage: {damage}        Fire Rate: {fireRate}\n" +
             $"Move Speed: {moveSpeed}        Projectile Size: {projectileSize}        Multi Shot: {projectileCount}\n" +
-            $"XP Magnet: {xpMagnet}        Survival Time: {survivalTime}        Active Enemies: {activeEnemies}";
+            $"XP Magnet: {xpMagnet}        Survival Time: {survivalTime}        Active Enemies: {activeEnemies}\n" +
+            $"Aura Pulse: {aura}        Orbit Blade: {orbit}";
     }
 
     private static Text CreateHudText(Transform parent, string name, string content, Vector2 anchoredPosition)
@@ -535,7 +539,7 @@ public class UIManager : MonoBehaviour
         Canvas canvas = EnsureCanvas();
         Transform existingHud = canvas.transform.Find("HUD");
         Transform parent = existingHud != null ? existingHud : canvas.transform;
-        runtimeStatsPanel = EnsurePanel(parent, "Runtime Stats Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-StandardMargin, 0f), new Vector2(380f, 342f), StandardPanelColor());
+        runtimeStatsPanel = EnsurePanel(parent, "Runtime Stats Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-StandardMargin, 0f), new Vector2(380f, 420f), StandardPanelColor());
 
         Text title = GetOrCreateText(runtimeStatsPanel.transform, "Stats Title", "Stats", RuntimeStatsTitleFontSize, TextAnchor.UpperCenter);
         RectTransform titleRect = title.rectTransform;
@@ -661,6 +665,7 @@ public class UIManager : MonoBehaviour
         PlayerController playerController = FindFirstObjectByType<PlayerController>();
         PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
         LevelSystem levelSystem = FindFirstObjectByType<LevelSystem>();
+        WeaponController weaponController = FindFirstObjectByType<WeaponController>();
         GameManager gameManager = GameManager.Instance;
 
         string hp = playerHealth == null ? "-- / --" : $"{Mathf.CeilToInt(playerHealth.CurrentHealth)} / {Mathf.CeilToInt(playerHealth.MaxHealth)}";
@@ -671,6 +676,8 @@ public class UIManager : MonoBehaviour
         string projectileCount = weapon == null ? "--" : weapon.ProjectileCount.ToString();
         string xpMagnet = XPOrb.CurrentAttractionRadius.ToString("0.0");
         string level = levelSystem == null ? "--" : levelSystem.CurrentLevel.ToString();
+        string aura = BuildAuraStats(weaponController);
+        string orbit = BuildOrbitStats(weaponController);
         string survivalTime = "--:--";
         if (gameManager != null)
         {
@@ -687,7 +694,31 @@ public class UIManager : MonoBehaviour
             $"Size   {projectileSize}\n" +
             $"Shots  {projectileCount}\n" +
             $"Magnet {xpMagnet}\n" +
+            $"Aura   {aura}\n" +
+            $"Orbit  {orbit}\n" +
             $"Lv/Time {level} / {survivalTime}";
+    }
+
+    private static string BuildAuraStats(WeaponController weaponController)
+    {
+        if (weaponController == null || !weaponController.HasAuraPulse || weaponController.AuraPulse == null)
+        {
+            return "Locked";
+        }
+
+        AuraPulseWeapon aura = weaponController.AuraPulse;
+        return $"On {aura.Damage:0.0} dmg / {aura.Radius:0.0}r / {aura.Cooldown:0.0}s";
+    }
+
+    private static string BuildOrbitStats(WeaponController weaponController)
+    {
+        if (weaponController == null || !weaponController.HasOrbitBlade || weaponController.OrbitBlade == null)
+        {
+            return "Locked";
+        }
+
+        OrbitBladeWeapon orbit = weaponController.OrbitBlade;
+        return $"On {orbit.OrbitCount} blade / {orbit.OrbitRadius:0.0}r";
     }
 
     private static bool CanToggleRuntimeStats()

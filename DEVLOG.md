@@ -277,3 +277,24 @@ Known limitations:
 - Stopped Play Mode through Hera and rechecked Unity console errors: no errors returned.
 
 Integration result: pass. `integration-playable-v0.2` is a documentation-only integration branch pointing at the latest validated playable feature set.
+
+## 2026-06-17 - Weapon Variety Pass 01
+
+- Created and switched to branch `ai-weapon-variety-pass-01` from `integration-playable-v0.2`.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`; Unity was connected, `SampleScene` was clean, and console errors were empty.
+- Reviewed `AutoWeapon`, `Projectile`, `UpgradeManager`, `UIManager`, `Enemy`, `GameManager`, `AudioManager`, `FeedbackEffect`, and related pooling scripts before editing.
+- Preserved the existing auto projectile weapon as `Basic Bolt`; its damage, fire-rate, projectile-size, multi-shot, projectile pooling, hit SFX, damage numbers, and enemy HP bar behavior remain on the existing `AutoWeapon`/`Projectile` path.
+- Added `WeaponController` as a runtime player component that tracks unlock state for optional weapons.
+- Added `AuraPulseWeapon`, unlocked through level-up choices. It periodically damages enemies within a radius and reuses the pooled `FeedbackEffect` pulse for a visible placeholder area effect.
+- Added `OrbitBladeWeapon` and `OrbitBladeHitbox`, unlocked through level-up choices. It creates a small reusable orbiting blade object with a per-enemy hit cooldown to avoid instant repeated damage.
+- Added level-up upgrade choices `Unlock Aura Pulse` and `Unlock Orbit Blade`; each choice appears only while the corresponding weapon is locked and is removed from the pool after unlock.
+- Updated runtime and pause stats to show Aura Pulse and Orbit Blade lock/unlock state and simple weapon values.
+- Updated `README.md` and `PLAYTEST_CHECKLIST.md` with weapon unlock and compatibility checks.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors after the script changes.
+- Entered Play Mode through Hera and validated that Basic Bolt/`AutoWeapon` still exists, Aura Pulse and Orbit Blade unlock choices are present while locked, both unlock choices disappear after unlocking, both weapon components enable correctly, Aura Pulse damages enemies, Orbit Blade damages enemies with its hit path, damage numbers spawn, and runtime stats show both weapons as unlocked.
+- Stopped Play Mode through Hera and rechecked Unity console errors; no errors were returned.
+
+Known limitations:
+- Aura Pulse uses a filled placeholder pulse rather than a true ring sprite.
+- Orbit Blade currently has one blade and no weapon-specific upgrade levels; this pass implements unlocks only.
+- Orbit Blade hit cooldown state is local to each blade hitbox and intentionally simple for the MVP.
