@@ -253,3 +253,27 @@ Known limitations:
 - AirPods output could not be verified automatically through Hera; manual device testing is still required.
 - The audio system still uses placeholder procedural SFX only; no BGM or imported audio assets were added.
 - Unity Editor/Bluetooth/FMOD output-device behavior remains outside project gameplay-code control.
+
+## 2026-06-17 - Playable v0.2 Integration Verification
+
+- Created and switched to integration branch `integration-playable-v0.2` from latest validated feature branch `ai-audio-airpods-and-autonomous-roadmap-pass-01`.
+- Confirmed branch lineage includes the validated feature commits for MVP gameplay, procedural SFX, upgrade variety, combat readability, object pooling, enemy variety, UI/UX readability, pause menu, runtime stats, responsive UI, audio test tone, and autonomous roadmap/rules.
+- Did not add gameplay features or modify gameplay systems during this integration pass.
+- Ran `/Users/dongttak/go/bin/hera-agent-unity status`: Unity Editor was connected on port `8090`.
+- Ran `/Users/dongttak/go/bin/hera-agent-unity list`: command catalog returned successfully.
+- Ran `/Users/dongttak/go/bin/hera-agent-unity console --type error`: no Unity console errors were returned before Play Mode.
+- Inspected active scene with `scene --action info`: `Assets/Scenes/SampleScene.unity` was loaded, active, and not dirty.
+- Inspected root objects with `find_gameobjects --limit 0`; confirmed `Canvas`, `EnemySpawner`, `EventSystem`, `GameManager`, `Global Light 2D`, `Main Camera`, and `Player`.
+- Entered Play Mode through Hera and ran a runtime inventory probe.
+- Runtime probe confirmed:
+  - `Player` has `PlayerController`, `PlayerHealth`, `AutoWeapon`, `Rigidbody2D`, `CircleCollider2D`, and `SpriteRenderer`.
+  - `GameManager` object has `GameManager`, `LevelSystem`, `UIManager`, `UpgradeManager`, `AudioManager`, and `AudioSource`.
+  - `EnemySpawner` exists and has `EnemySpawner`.
+  - Runtime stats panel and pause panel exist.
+  - `AudioManager.Instance`, reusable `AudioSource`, and `PlayTestTone()` are present.
+  - Audio hint text includes `Audio Test: T`.
+  - Runtime types exist for `Projectile`, `XPOrb`, `DamageNumber`, `FeedbackEffect`, `Enemy`, `AutoWeapon`, `LevelSystem`, and `UpgradeManager`.
+- Rechecked Unity console errors during Play Mode: no errors returned.
+- Stopped Play Mode through Hera and rechecked Unity console errors: no errors returned.
+
+Integration result: pass. `integration-playable-v0.2` is a documentation-only integration branch pointing at the latest validated playable feature set.
