@@ -142,17 +142,24 @@
 ## UI Readability Checks
 
 - [ ] CanvasScaler is set to Scale With Screen Size with a `1920x1080` reference resolution.
-- [ ] At `1920x1080`, HUD, timer, start hint, upgrade panel, pause panel, and game-over panel are readable.
+- [ ] CanvasScaler match mode uses a balanced width/height setting so UI scales across aspect ratios.
+- [ ] At `1280x720`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel are still readable.
+- [ ] At `1920x1080`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel are readable.
 - [ ] At `2560x1440`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel are readable.
 - [ ] At `3840x2160`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel are readable.
-- [ ] At `1280x720`, HUD, timer, start hint, upgrade panel, pause panel, and game-over panel are still readable.
+- [ ] At `1440x900`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel remain readable.
+- [ ] At `2560x1600`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel remain readable.
+- [ ] At `3440x1440`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel remain readable and do not drift too far from useful screen areas.
+- [ ] At `3840x1600`, HUD, timer, start hint, runtime stats, upgrade panel, pause panel, and game-over panel remain readable.
+- [ ] Top-left HUD, top-center timer, bottom-center start hint, and right-side runtime stats keep consistent margins.
 - [ ] HP text is readable during movement and combat.
 - [ ] HP bar fill changes when the player takes damage or heals.
 - [ ] Level text updates after leveling.
 - [ ] XP text uses the correct current and required values.
 - [ ] XP progress bar fills as XP is collected and resets after level-up.
-- [ ] Timer is readable in the top-right corner.
+- [ ] Timer is readable in the top-center panel.
 - [ ] HUD panels improve contrast without covering the center of the playfield.
+- [ ] HUD panels do not overlap each other at 16:9, 16:10, 4K, or ultrawide sizes.
 - [ ] Start hint includes movement, pause, and upgrade-selection controls.
 - [ ] Start hint includes `Tab: Stats`.
 - [ ] Start hint is readable but does not linger too long.
@@ -166,6 +173,7 @@
 - [ ] Game over text and restart instruction are readable.
 - [ ] Pause panel text and buttons are readable.
 - [ ] Pause stats rows are readable and do not overflow the stats panel.
+- [ ] Pause, level-up, and game-over panels remain centered and readable on ultrawide views.
 - [ ] UI remains usable at common Game view sizes.
 
 ## Game Feel Checks

@@ -12,18 +12,21 @@ public class UIManager : MonoBehaviour
 {
     private static Canvas cachedCanvas;
     private const float StartHintLifetime = 6f;
-    private const int HudFontSize = 28;
-    private const int TimerFontSize = 34;
-    private const int StartHintFontSize = 26;
-    private const int GameOverTitleFontSize = 56;
-    private const int GameOverDetailsFontSize = 30;
-    private const int MenuButtonFontSize = 30;
-    private const int PauseTitleFontSize = 54;
-    private const int PauseDetailsFontSize = 28;
-    private const int StatsTitleFontSize = 34;
-    private const int StatsRowFontSize = 25;
-    private const int RuntimeStatsTitleFontSize = 26;
-    private const int RuntimeStatsRowFontSize = 22;
+    private const int HudFontSize = 32;
+    private const int TimerFontSize = 40;
+    private const int StartHintFontSize = 30;
+    private const int GameOverTitleFontSize = 64;
+    private const int GameOverDetailsFontSize = 36;
+    private const int MenuButtonFontSize = 34;
+    private const int PauseTitleFontSize = 60;
+    private const int PauseDetailsFontSize = 34;
+    private const int StatsTitleFontSize = 36;
+    private const int StatsRowFontSize = 28;
+    private const int RuntimeStatsTitleFontSize = 32;
+    private const int RuntimeStatsRowFontSize = 26;
+    private const int SmallHintFontSize = 22;
+    private const float StandardMargin = 32f;
+    private const float PanelAlpha = 0.86f;
 
     private Text hpText;
     private Text levelText;
@@ -280,18 +283,18 @@ public class UIManager : MonoBehaviour
         rect.offsetMin = Vector2.zero;
         rect.offsetMax = Vector2.zero;
 
-        GameObject leftPanel = EnsurePanel(hud.transform, "Left HUD Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(24f, -24f), new Vector2(430f, 176f), new Color(0.02f, 0.025f, 0.035f, 0.82f));
-        hpText = CreateHudText(leftPanel.transform, "HP Text", "HP 100 / 100", new Vector2(16f, -14f));
-        hpBarFill = EnsureProgressBar(leftPanel.transform, "HP Bar", new Vector2(16f, -56f), new Vector2(380f, 20f), new Color(0.2f, 0.95f, 0.35f, 0.95f));
-        levelText = CreateHudText(leftPanel.transform, "Level Text", "Level 1", new Vector2(16f, -84f));
-        xpText = CreateHudText(leftPanel.transform, "XP Text", "XP 0 / 4", new Vector2(16f, -120f));
-        xpBarFill = EnsureProgressBar(leftPanel.transform, "XP Bar", new Vector2(16f, -154f), new Vector2(380f, 16f), new Color(0.35f, 0.78f, 1f, 0.95f));
+        GameObject leftPanel = EnsurePanel(hud.transform, "Left HUD Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(StandardMargin, -StandardMargin), new Vector2(500f, 206f), StandardPanelColor());
+        hpText = CreateHudText(leftPanel.transform, "HP Text", "HP 100 / 100", new Vector2(20f, -16f));
+        hpBarFill = EnsureProgressBar(leftPanel.transform, "HP Bar", new Vector2(20f, -62f), new Vector2(440f, 24f), new Color(0.2f, 0.95f, 0.35f, 0.95f));
+        levelText = CreateHudText(leftPanel.transform, "Level Text", "Level 1", new Vector2(20f, -96f));
+        xpText = CreateHudText(leftPanel.transform, "XP Text", "XP 0 / 4", new Vector2(20f, -136f));
+        xpBarFill = EnsureProgressBar(leftPanel.transform, "XP Bar", new Vector2(20f, -176f), new Vector2(440f, 18f), new Color(0.35f, 0.78f, 1f, 0.95f));
 
-        GameObject timePanel = EnsurePanel(hud.transform, "Time HUD Panel", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -24f), new Vector2(270f, 62f), new Color(0.02f, 0.025f, 0.035f, 0.82f));
-        timeText = CreateHudText(timePanel.transform, "Time Text", "Time 00:00", new Vector2(0f, -10f));
+        GameObject timePanel = EnsurePanel(hud.transform, "Time HUD Panel", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -StandardMargin), new Vector2(320f, 76f), StandardPanelColor());
+        timeText = CreateHudText(timePanel.transform, "Time Text", "Time 00:00", new Vector2(0f, -12f));
         timeText.fontSize = TimerFontSize;
-        timeText.rectTransform.sizeDelta = new Vector2(240f, 42f);
-        timeText.alignment = TextAnchor.UpperRight;
+        timeText.rectTransform.sizeDelta = new Vector2(290f, 50f);
+        timeText.alignment = TextAnchor.UpperCenter;
         timeText.rectTransform.anchorMin = new Vector2(0.5f, 1f);
         timeText.rectTransform.anchorMax = new Vector2(0.5f, 1f);
         timeText.rectTransform.pivot = new Vector2(0.5f, 1f);
@@ -311,27 +314,27 @@ public class UIManager : MonoBehaviour
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(680f, 430f);
+        rect.sizeDelta = new Vector2(760f, 500f);
         rect.anchoredPosition = Vector2.zero;
 
         Image image = EnsureImage(gameOverPanel);
-        image.color = new Color(0.06f, 0.035f, 0.045f, 0.96f);
+        image.color = new Color(0.05f, 0.035f, 0.045f, 0.96f);
 
         gameOverTitleText = GetOrCreateText(gameOverPanel.transform, "Game Over Title", "Game Over", GameOverTitleFontSize, TextAnchor.MiddleCenter);
         RectTransform titleRect = gameOverTitleText.rectTransform;
         titleRect.anchorMin = new Vector2(0f, 1f);
         titleRect.anchorMax = new Vector2(1f, 1f);
         titleRect.pivot = new Vector2(0.5f, 1f);
-        titleRect.anchoredPosition = new Vector2(0f, -34f);
-        titleRect.sizeDelta = new Vector2(-70f, 76f);
+        titleRect.anchoredPosition = new Vector2(0f, -36f);
+        titleRect.sizeDelta = new Vector2(-80f, 88f);
 
         gameOverDetailsText = GetOrCreateText(gameOverPanel.transform, "Game Over Details", "Survived 00:00\nFinal Level 1\nPress R to Restart", GameOverDetailsFontSize, TextAnchor.MiddleCenter);
         RectTransform detailsRect = gameOverDetailsText.rectTransform;
         detailsRect.anchorMin = new Vector2(0f, 0.5f);
         detailsRect.anchorMax = new Vector2(1f, 0.5f);
         detailsRect.pivot = new Vector2(0.5f, 0.5f);
-        detailsRect.anchoredPosition = new Vector2(0f, 16f);
-        detailsRect.sizeDelta = new Vector2(-80f, 140f);
+        detailsRect.anchoredPosition = new Vector2(0f, 24f);
+        detailsRect.sizeDelta = new Vector2(-90f, 160f);
 
         Button restartButton = CreateRestartButton(gameOverPanel.transform);
         restartButton.onClick.RemoveAllListeners();
@@ -357,7 +360,7 @@ public class UIManager : MonoBehaviour
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(920f, 640f);
+        rect.sizeDelta = new Vector2(980f, 690f);
         rect.anchoredPosition = Vector2.zero;
 
         Image image = EnsureImage(pausePanel);
@@ -369,34 +372,34 @@ public class UIManager : MonoBehaviour
         titleRect.anchorMax = new Vector2(1f, 1f);
         titleRect.pivot = new Vector2(0.5f, 1f);
         titleRect.anchoredPosition = new Vector2(0f, -34f);
-        titleRect.sizeDelta = new Vector2(-70f, 70f);
+        titleRect.sizeDelta = new Vector2(-80f, 78f);
 
         pauseDetailsText = GetOrCreateText(pausePanel.transform, "Pause Details", "Press Esc or P to resume", PauseDetailsFontSize, TextAnchor.MiddleCenter);
         RectTransform detailsRect = pauseDetailsText.rectTransform;
         detailsRect.anchorMin = new Vector2(0f, 1f);
         detailsRect.anchorMax = new Vector2(1f, 1f);
         detailsRect.pivot = new Vector2(0.5f, 1f);
-        detailsRect.anchoredPosition = new Vector2(0f, -112f);
-        detailsRect.sizeDelta = new Vector2(-80f, 46f);
+        detailsRect.anchoredPosition = new Vector2(0f, -118f);
+        detailsRect.sizeDelta = new Vector2(-90f, 52f);
 
-        GameObject statsPanel = EnsurePanel(pausePanel.transform, "Stats Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -34f), new Vector2(780f, 330f), new Color(0f, 0f, 0f, 0.36f));
-        Text statsTitle = GetOrCreateText(statsPanel.transform, "Stats Title", "Current Stats", StatsTitleFontSize, TextAnchor.UpperCenter);
+        GameObject statsPanel = EnsurePanel(pausePanel.transform, "Stats Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -34f), new Vector2(830f, 350f), new Color(0f, 0f, 0f, 0.38f));
+        Text statsTitle = GetOrCreateText(statsPanel.transform, "Stats Title", "Stats Summary", StatsTitleFontSize, TextAnchor.UpperCenter);
         RectTransform statsTitleRect = statsTitle.rectTransform;
         statsTitleRect.anchorMin = new Vector2(0f, 1f);
         statsTitleRect.anchorMax = new Vector2(1f, 1f);
         statsTitleRect.pivot = new Vector2(0.5f, 1f);
         statsTitleRect.anchoredPosition = new Vector2(0f, -14f);
-        statsTitleRect.sizeDelta = new Vector2(-32f, 44f);
+        statsTitleRect.sizeDelta = new Vector2(-36f, 48f);
 
         statsText = GetOrCreateText(statsPanel.transform, "Stats Text", "", StatsRowFontSize, TextAnchor.UpperLeft);
         RectTransform statsRect = statsText.rectTransform;
         statsRect.anchorMin = Vector2.zero;
         statsRect.anchorMax = Vector2.one;
-        statsRect.offsetMin = new Vector2(30f, 24f);
-        statsRect.offsetMax = new Vector2(-30f, -68f);
+        statsRect.offsetMin = new Vector2(34f, 24f);
+        statsRect.offsetMax = new Vector2(-34f, -72f);
         statsText.color = new Color(0.9f, 0.96f, 1f);
 
-        Button resumeButton = CreateMenuButton(pausePanel.transform, "Resume Button", "Resume", new Vector2(-155f, 32f));
+        Button resumeButton = CreateMenuButton(pausePanel.transform, "Resume Button", "Resume", new Vector2(-170f, 36f));
         resumeButton.onClick.RemoveAllListeners();
         resumeButton.onClick.AddListener(() =>
         {
@@ -406,7 +409,7 @@ public class UIManager : MonoBehaviour
             }
         });
 
-        Button restartButton = CreateMenuButton(pausePanel.transform, "Restart Button", "Restart", new Vector2(155f, 32f));
+        Button restartButton = CreateMenuButton(pausePanel.transform, "Restart Button", "Restart", new Vector2(170f, 36f));
         restartButton.onClick.RemoveAllListeners();
         restartButton.onClick.AddListener(() =>
         {
@@ -466,7 +469,7 @@ public class UIManager : MonoBehaviour
         rect.anchorMax = new Vector2(0f, 1f);
         rect.pivot = new Vector2(0f, 1f);
         rect.anchoredPosition = anchoredPosition;
-        rect.sizeDelta = new Vector2(392f, 38f);
+        rect.sizeDelta = new Vector2(452f, 42f);
         return text;
     }
 
@@ -485,7 +488,7 @@ public class UIManager : MonoBehaviour
         rect.anchorMax = new Vector2(0.5f, 0f);
         rect.pivot = new Vector2(0.5f, 0f);
         rect.anchoredPosition = anchoredPosition;
-        rect.sizeDelta = new Vector2(280f, 66f);
+        rect.sizeDelta = new Vector2(320f, 72f);
 
         Image image = EnsureImage(buttonObject);
         image.color = new Color(0.22f, 0.48f, 0.62f);
@@ -509,7 +512,7 @@ public class UIManager : MonoBehaviour
 
     private void BuildStartHint(Transform parent)
     {
-        GameObject hint = EnsurePanel(parent, "Start Hint", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 36f), new Vector2(900f, 112f), new Color(0.02f, 0.03f, 0.04f, 0.82f));
+        GameObject hint = EnsurePanel(parent, "Start Hint", new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 40f), new Vector2(1060f, 128f), StandardPanelColor());
         startHintGroup = hint.GetComponent<CanvasGroup>();
         if (startHintGroup == null)
         {
@@ -532,31 +535,31 @@ public class UIManager : MonoBehaviour
         Canvas canvas = EnsureCanvas();
         Transform existingHud = canvas.transform.Find("HUD");
         Transform parent = existingHud != null ? existingHud : canvas.transform;
-        runtimeStatsPanel = EnsurePanel(parent, "Runtime Stats Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-24f, 0f), new Vector2(330f, 292f), new Color(0.02f, 0.025f, 0.035f, 0.82f));
+        runtimeStatsPanel = EnsurePanel(parent, "Runtime Stats Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-StandardMargin, 0f), new Vector2(380f, 342f), StandardPanelColor());
 
-        Text title = GetOrCreateText(runtimeStatsPanel.transform, "Stats Title", "Player Stats", RuntimeStatsTitleFontSize, TextAnchor.UpperCenter);
+        Text title = GetOrCreateText(runtimeStatsPanel.transform, "Stats Title", "Stats", RuntimeStatsTitleFontSize, TextAnchor.UpperCenter);
         RectTransform titleRect = title.rectTransform;
         titleRect.anchorMin = new Vector2(0f, 1f);
         titleRect.anchorMax = new Vector2(1f, 1f);
         titleRect.pivot = new Vector2(0.5f, 1f);
-        titleRect.anchoredPosition = new Vector2(0f, -12f);
-        titleRect.sizeDelta = new Vector2(-28f, 34f);
+        titleRect.anchoredPosition = new Vector2(0f, -14f);
+        titleRect.sizeDelta = new Vector2(-32f, 40f);
 
-        Text hint = GetOrCreateText(runtimeStatsPanel.transform, "Stats Hint", "Tab: Stats", 18, TextAnchor.UpperRight);
+        Text hint = GetOrCreateText(runtimeStatsPanel.transform, "Stats Hint", "Tab: Stats", SmallHintFontSize, TextAnchor.UpperRight);
         RectTransform hintRect = hint.rectTransform;
         hintRect.anchorMin = new Vector2(0f, 1f);
         hintRect.anchorMax = new Vector2(1f, 1f);
         hintRect.pivot = new Vector2(1f, 1f);
-        hintRect.anchoredPosition = new Vector2(-14f, -44f);
-        hintRect.sizeDelta = new Vector2(-28f, 24f);
+        hintRect.anchoredPosition = new Vector2(-18f, -52f);
+        hintRect.sizeDelta = new Vector2(-36f, 28f);
         hint.color = new Color(0.72f, 0.82f, 0.88f);
 
         runtimeStatsText = GetOrCreateText(runtimeStatsPanel.transform, "Stats Text", "", RuntimeStatsRowFontSize, TextAnchor.UpperLeft);
         RectTransform statsRect = runtimeStatsText.rectTransform;
         statsRect.anchorMin = Vector2.zero;
         statsRect.anchorMax = Vector2.one;
-        statsRect.offsetMin = new Vector2(20f, 18f);
-        statsRect.offsetMax = new Vector2(-20f, -74f);
+        statsRect.offsetMin = new Vector2(24f, 22f);
+        statsRect.offsetMax = new Vector2(-24f, -86f);
         runtimeStatsText.color = new Color(0.9f, 0.96f, 1f);
 
         runtimeStatsPanel.SetActive(true);
@@ -577,6 +580,11 @@ public class UIManager : MonoBehaviour
         image.color = color;
         image.raycastTarget = false;
         return panel;
+    }
+
+    private static Color StandardPanelColor()
+    {
+        return new Color(0.02f, 0.025f, 0.035f, PanelAlpha);
     }
 
     private static Image EnsureProgressBar(Transform parent, string name, Vector2 anchoredPosition, Vector2 size, Color fillColor)

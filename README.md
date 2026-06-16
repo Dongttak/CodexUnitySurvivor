@@ -62,6 +62,9 @@ A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
   - Semi-transparent HUD panels keep stats readable without covering the center of combat.
   - Canvas uses `Scale With Screen Size`, `1920x1080` reference resolution, and a balanced width/height match.
   - HUD, timer, start hint, level-up, pause, and game-over text use explicit larger font sizes.
+  - Responsive UI pass improves readability across common 16:9, 16:10, 4K, and ultrawide Game view sizes.
+  - HUD anchors keep HP/XP/level at top-left, the timer at top-center, the start hint at bottom-center, and runtime stats on the right side.
+  - Level-up, pause, and game-over panels are larger centered modals with stronger backing panels and more generous spacing.
   - Enemy HP bars stay hidden on full-health enemies and appear after damage.
   - Floating damage numbers use larger world-space text, a longer readable lifetime, and a dark shadow.
   - A start hint explains movement, pause, and upgrade selection for first-time players.

@@ -7,10 +7,10 @@ using System.Collections.Generic;
 
 public class UpgradeManager : MonoBehaviour
 {
-    private const int TitleFontSize = 44;
-    private const int ShortcutFontSize = 30;
-    private const int UpgradeNameFontSize = 31;
-    private const int DescriptionFontSize = 22;
+    private const int TitleFontSize = 52;
+    private const int ShortcutFontSize = 36;
+    private const int UpgradeNameFontSize = 38;
+    private const int DescriptionFontSize = 28;
 
     private GameObject panel;
     private Button damageButton;
@@ -94,18 +94,18 @@ public class UpgradeManager : MonoBehaviour
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(740f, 500f);
+        rect.sizeDelta = new Vector2(860f, 570f);
         rect.anchoredPosition = Vector2.zero;
 
         Image background = EnsureImage(panel);
-        background.color = new Color(0.04f, 0.05f, 0.065f, 0.96f);
+        background.color = new Color(0.035f, 0.045f, 0.06f, 0.96f);
 
         titleText = GetOrCreateText(panel.transform, "Title", "Choose an Upgrade", TitleFontSize, TextAnchor.MiddleCenter);
-        SetRect(titleText.rectTransform, new Vector2(0f, 194f), new Vector2(640f, 66f));
+        SetRect(titleText.rectTransform, new Vector2(0f, 224f), new Vector2(760f, 74f));
 
-        damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 92f));
-        fireRateButton = CreateChoiceButton("Fire Rate Button", new Vector2(0f, -34f));
-        moveSpeedButton = CreateChoiceButton("Move Speed Button", new Vector2(0f, -160f));
+        damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 110f));
+        fireRateButton = CreateChoiceButton("Fire Rate Button", new Vector2(0f, -36f));
+        moveSpeedButton = CreateChoiceButton("Move Speed Button", new Vector2(0f, -182f));
 
         panel.SetActive(false);
     }
@@ -116,10 +116,10 @@ public class UpgradeManager : MonoBehaviour
         buttonObject.transform.SetParent(panel.transform, false);
 
         RectTransform rect = EnsureRectTransform(buttonObject);
-        SetRect(rect, position, new Vector2(620f, 104f));
+        SetRect(rect, position, new Vector2(720f, 122f));
 
         Image image = EnsureImage(buttonObject);
-        image.color = new Color(0.14f, 0.25f, 0.31f, 0.98f);
+        image.color = new Color(0.13f, 0.24f, 0.31f, 0.98f);
 
         Button button = buttonObject.GetComponent<Button>();
         if (button == null)
@@ -128,22 +128,22 @@ public class UpgradeManager : MonoBehaviour
         }
         button.targetGraphic = image;
         ColorBlock colors = button.colors;
-        colors.normalColor = new Color(0.14f, 0.25f, 0.31f, 0.98f);
-        colors.highlightedColor = new Color(0.23f, 0.43f, 0.52f, 1f);
-        colors.pressedColor = new Color(0.42f, 0.67f, 0.58f, 1f);
+        colors.normalColor = new Color(0.13f, 0.24f, 0.31f, 0.98f);
+        colors.highlightedColor = new Color(0.22f, 0.42f, 0.52f, 1f);
+        colors.pressedColor = new Color(0.4f, 0.68f, 0.58f, 1f);
         colors.selectedColor = colors.highlightedColor;
         colors.disabledColor = new Color(0.12f, 0.12f, 0.12f, 0.65f);
         button.colors = colors;
 
         Text shortcut = GetOrCreateText(buttonObject.transform, "Shortcut", "[1]", ShortcutFontSize, TextAnchor.MiddleCenter);
-        SetChildRect(shortcut.rectTransform, new Vector2(0f, 0f), new Vector2(86f, 82f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
+        SetChildRect(shortcut.rectTransform, new Vector2(0f, 0f), new Vector2(96f, 96f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
 
         Text nameText = GetOrCreateText(buttonObject.transform, "Name", "", UpgradeNameFontSize, TextAnchor.LowerLeft);
-        SetChildRect(nameText.rectTransform, new Vector2(96f, 12f), new Vector2(490f, 40f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
+        SetChildRect(nameText.rectTransform, new Vector2(112f, 18f), new Vector2(560f, 46f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
 
         Text description = GetOrCreateText(buttonObject.transform, "Description", "", DescriptionFontSize, TextAnchor.UpperLeft);
         description.color = new Color(0.84f, 0.92f, 0.96f);
-        SetChildRect(description.rectTransform, new Vector2(96f, -18f), new Vector2(490f, 34f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
+        SetChildRect(description.rectTransform, new Vector2(112f, -24f), new Vector2(560f, 44f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0f, 0.5f));
 
         return button;
     }

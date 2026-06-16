@@ -212,3 +212,24 @@ Known limitations:
 Known limitations:
 - Enemy HP bars remain world-space SpriteRenderer bars rather than screen-space UI; this is simpler and stable, but manual review at `3840x2160` is still needed.
 - The compact runtime stats panel is intentionally visible by default for development/testing and can cover a small right-side area until toggled off with `Tab`.
+
+## 2026-06-16 - Responsive UI Readability Pass 01
+
+- Created and switched to branch `ai-responsive-uiux-pass-01` from `ai-uiux-4k-hp-stats-pass-01`.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `list`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`; Unity was connected, `SampleScene` was clean, and console errors were empty.
+- Reviewed `UIManager`, `GameManager`, `UpgradeManager`, `Enemy`, and `DamageNumber` before editing.
+- Addressed responsive UI feedback for common 16:9, 16:10, 4K, and ultrawide Game view sizes including `1280x720`, `1920x1080`, `2560x1440`, `3840x2160`, `1440x900`, `2560x1600`, `3440x1440`, and `3840x1600`.
+- Confirmed the runtime Canvas remains configured with `CanvasScaler.ScaleWithScreenSize`, reference resolution `1920x1080`, `MatchWidthOrHeight`, and match value `0.5`.
+- Increased explicit UI font sizes again for readability: HUD `32`, timer `40`, start hint `30`, runtime stats title `32`, runtime stats rows `26`, pause title `60`, pause details `34`, pause stats rows `28`, game-over title `64`, game-over details `36`, level-up title `52`, upgrade shortcuts `36`, upgrade names `38`, and upgrade descriptions `28`.
+- Reworked runtime UI sizing and anchors: top-left HUD panel `500x206`, top-center timer panel `320x76`, bottom-center start hint `1060x128`, right-side runtime stats panel `380x342`, centered pause panel `980x690`, and centered game-over panel `760x500`.
+- Enlarged the level-up panel to `860x570` and upgrade cards to `720x122` so shortcut, title, and description text have more room at smaller Game view sizes.
+- Added more consistent semi-transparent panel styling, margins, and spacing across HUD, stats, pause, level-up, and game-over UI.
+- Reviewed combat readability during validation; enemy HP bars and damage numbers remained unchanged in code for this pass because the previous 4K/damage readability values were already active and validated.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors.
+- Entered Play Mode through Hera and validated CanvasScaler settings, HUD anchors, explicit font sizes, runtime stats visibility and `Tab` toggle, level-up panel sizing, pause panel sizing, game-over panel sizing, larger damage numbers, and HP bar visibility/reset behavior.
+- Stopped Play Mode through Hera and rechecked the Unity console; no errors were returned.
+
+Known limitations:
+- Responsive layout was validated through runtime object inspection and Play Mode probes, but not by pixel-perfect screenshot review at every listed resolution.
+- The UI is still runtime uGUI placeholder styling rather than a final art-directed interface.
+- The always-visible runtime stats panel intentionally occupies right-side screen space for development playtesting and can be hidden with `Tab`.
