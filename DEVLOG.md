@@ -298,3 +298,33 @@ Known limitations:
 - Aura Pulse uses a filled placeholder pulse rather than a true ring sprite.
 - Orbit Blade currently has one blade and no weapon-specific upgrade levels; this pass implements unlocks only.
 - Orbit Blade hit cooldown state is local to each blade hitbox and intentionally simple for the MVP.
+
+## 2026-06-19 - Korean UI Wave Director And Elite Enemy Pass 01
+
+- Created and switched to branch `ai-korean-ui-wave-director-pass-01` from `ai-weapon-variety-pass-01`.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `list`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`; Unity was connected to `SampleScene`, expected root objects were present, and console errors were empty before editing.
+- Reviewed `EnemySpawner`, `Enemy`, `GameManager`, `UIManager`, `LevelSystem`, `UpgradeManager`, `AudioManager`, `WeaponController`, and pooling-related behavior before modifying the project.
+- Localized major player-facing runtime UI strings into Korean while keeping script/class/method/file names in English.
+- Updated HUD, start hint, pause menu, runtime stats, pause stats, level-up title and upgrade cards, game-over results, weapon labels, and upgrade names/descriptions to Korean.
+- Added a simple director timeline:
+  - `0:00 - 1:00`: Basic only, gentle spawn interval.
+  - `1:00 - 2:00`: Fast enemies enter the pool and spawn pressure rises slightly.
+  - `2:00 - 3:30`: Tank enemies enter the pool.
+  - `3:30 - 5:00`: higher pressure wave with more Fast enemies.
+  - `5:00+`: Elite phase after the elite event.
+- Added Korean announcement UI near the top center with a semi-transparent backing panel and unscaled fade-out.
+- Added announcements for `빠른 적 등장!`, `탱커 적 등장!`, `적의 공세가 거세집니다!`, and `정예 적 접근 중!`.
+- Added an Elite enemy definition using the existing pooled `Enemy` path: HP `78`, speed `1.45`, contact damage `12`, XP `12`, visual size `2.05`, cyan placeholder color, and full-health HP bar visibility.
+- Added a simple kill counter through `GameManager.RegisterKill`, incremented from `Enemy.Die`, and displayed it in stats and the Korean game-over result screen.
+- Updated the game-over result screen to show Korean survival time, final level, kill count, unlocked weapons, and restart instruction.
+- Kept Basic Bolt, Aura Pulse, Orbit Blade, procedural SFX, damage numbers, HP bars, and existing object pools connected.
+- Updated `README.md` and `PLAYTEST_CHECKLIST.md` to Korean-first documentation covering controls, wave timeline, enemy types, announcements, result screen, and manual validation checks.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors after script changes.
+- Entered Play Mode through Hera and validated Player, GameManager, UIManager, EnemySpawner, Canvas, WeaponController, Korean HUD/stat text, the phase name `1단계: 기본 적`, the Elite definition, and kill counter access.
+- Temporarily fast-forwarded the Play Mode director state through Hera reflection to validate the 5-minute Elite event; `Elite Enemy` spawned, phase changed to `5단계: 정예 적`, and announcement text showed `정예 적 접근 중!`.
+- Stopped Play Mode through Hera and rechecked Unity console errors; no errors were returned.
+
+Known limitations:
+- Korean glyph rendering depends on Unity's built-in legacy runtime font behavior on the local editor; manual visual review is required to confirm no missing glyph boxes.
+- The Elite enemy uses the existing chase/contact enemy logic only; it does not have a unique boss pattern.
+- The 5-minute elite timing is validated through code and Play Mode smoke checks, but full real-time 5-minute manual playtest is still recommended.

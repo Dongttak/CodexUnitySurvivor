@@ -25,8 +25,10 @@ public class UIManager : MonoBehaviour
     private const int RuntimeStatsTitleFontSize = 32;
     private const int RuntimeStatsRowFontSize = 26;
     private const int SmallHintFontSize = 22;
+    private const int AnnouncementFontSize = 44;
     private const float StandardMargin = 32f;
     private const float PanelAlpha = 0.86f;
+    private const float AnnouncementLifetime = 3f;
 
     private Text hpText;
     private Text levelText;
@@ -45,7 +47,11 @@ public class UIManager : MonoBehaviour
     private Text runtimeStatsText;
     private Text startHintText;
     private CanvasGroup startHintGroup;
+    private GameObject announcementPanel;
+    private Text announcementText;
+    private CanvasGroup announcementGroup;
     private float startHintTimer;
+    private float announcementTimer;
     private float statsRefreshTimer;
 
     private void Awake()
@@ -56,10 +62,13 @@ public class UIManager : MonoBehaviour
         BuildGameOverPanel();
         BuildPausePanel();
         BuildRuntimeStatsPanel();
+        BuildAnnouncementPanel();
     }
 
     private void Update()
     {
+        UpdateAnnouncement();
+
         if (WasStatsTogglePressed() && CanToggleRuntimeStats())
         {
             ToggleRuntimeStats();
@@ -168,7 +177,7 @@ public class UIManager : MonoBehaviour
     {
         if (hpText != null)
         {
-            hpText.text = $"HP {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(maximum)}";
+            hpText.text = $"체력 {Mathf.CeilToInt(current)} / {Mathf.CeilToInt(maximum)}";
         }
 
         if (hpBarFill != null)
@@ -181,7 +190,7 @@ public class UIManager : MonoBehaviour
     {
         if (levelText != null)
         {
-            levelText.text = $"Level {level}";
+            levelText.text = $"레벨 {level}";
         }
     }
 
@@ -189,7 +198,7 @@ public class UIManager : MonoBehaviour
     {
         if (xpText != null)
         {
-            xpText.text = $"XP {current} / {required}";
+            xpText.text = $"경험치 {current} / {required}";
         }
 
         if (xpBarFill != null)
@@ -204,7 +213,7 @@ public class UIManager : MonoBehaviour
         {
             int minutes = Mathf.FloorToInt(seconds / 60f);
             int remainder = Mathf.FloorToInt(seconds % 60f);
-            timeText.text = $"Time {minutes:00}:{remainder:00}";
+            timeText.text = $"시간 {minutes:00}:{remainder:00}";
         }
     }
 
@@ -218,20 +227,30 @@ public class UIManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(seconds / 60f);
         int remainder = Mathf.FloorToInt(seconds % 60f);
         int level = 1;
+        int kills = 0;
         LevelSystem levelSystem = FindFirstObjectByType<LevelSystem>();
         if (levelSystem != null)
         {
             level = levelSystem.CurrentLevel;
         }
+        if (GameManager.Instance != null)
+        {
+            kills = GameManager.Instance.KillCount;
+        }
 
         if (gameOverTitleText != null)
         {
-            gameOverTitleText.text = "Game Over";
+            gameOverTitleText.text = "게임 오버";
         }
 
         if (gameOverDetailsText != null)
         {
-            gameOverDetailsText.text = $"Survived {minutes:00}:{remainder:00}\nFinal Level {level}\nPress R to Restart";
+            gameOverDetailsText.text =
+                $"생존 시간 {minutes:00}:{remainder:00}\n" +
+                $"최종 레벨 {level}\n" +
+                $"처치 수 {kills}\n" +
+                $"해금한 무기: {BuildUnlockedWeaponList()}\n" +
+                "R 키로 다시 시작";
         }
         gameOverPanel.SetActive(true);
     }
@@ -284,14 +303,14 @@ public class UIManager : MonoBehaviour
         rect.offsetMax = Vector2.zero;
 
         GameObject leftPanel = EnsurePanel(hud.transform, "Left HUD Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(StandardMargin, -StandardMargin), new Vector2(500f, 206f), StandardPanelColor());
-        hpText = CreateHudText(leftPanel.transform, "HP Text", "HP 100 / 100", new Vector2(20f, -16f));
+        hpText = CreateHudText(leftPanel.transform, "HP Text", "체력 100 / 100", new Vector2(20f, -16f));
         hpBarFill = EnsureProgressBar(leftPanel.transform, "HP Bar", new Vector2(20f, -62f), new Vector2(440f, 24f), new Color(0.2f, 0.95f, 0.35f, 0.95f));
-        levelText = CreateHudText(leftPanel.transform, "Level Text", "Level 1", new Vector2(20f, -96f));
-        xpText = CreateHudText(leftPanel.transform, "XP Text", "XP 0 / 4", new Vector2(20f, -136f));
+        levelText = CreateHudText(leftPanel.transform, "Level Text", "레벨 1", new Vector2(20f, -96f));
+        xpText = CreateHudText(leftPanel.transform, "XP Text", "경험치 0 / 4", new Vector2(20f, -136f));
         xpBarFill = EnsureProgressBar(leftPanel.transform, "XP Bar", new Vector2(20f, -176f), new Vector2(440f, 18f), new Color(0.35f, 0.78f, 1f, 0.95f));
 
         GameObject timePanel = EnsurePanel(hud.transform, "Time HUD Panel", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -StandardMargin), new Vector2(320f, 76f), StandardPanelColor());
-        timeText = CreateHudText(timePanel.transform, "Time Text", "Time 00:00", new Vector2(0f, -12f));
+        timeText = CreateHudText(timePanel.transform, "Time Text", "시간 00:00", new Vector2(0f, -12f));
         timeText.fontSize = TimerFontSize;
         timeText.rectTransform.sizeDelta = new Vector2(290f, 50f);
         timeText.alignment = TextAnchor.UpperCenter;
@@ -314,13 +333,13 @@ public class UIManager : MonoBehaviour
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(760f, 500f);
+        rect.sizeDelta = new Vector2(860f, 560f);
         rect.anchoredPosition = Vector2.zero;
 
         Image image = EnsureImage(gameOverPanel);
         image.color = new Color(0.05f, 0.035f, 0.045f, 0.96f);
 
-        gameOverTitleText = GetOrCreateText(gameOverPanel.transform, "Game Over Title", "Game Over", GameOverTitleFontSize, TextAnchor.MiddleCenter);
+        gameOverTitleText = GetOrCreateText(gameOverPanel.transform, "Game Over Title", "게임 오버", GameOverTitleFontSize, TextAnchor.MiddleCenter);
         RectTransform titleRect = gameOverTitleText.rectTransform;
         titleRect.anchorMin = new Vector2(0f, 1f);
         titleRect.anchorMax = new Vector2(1f, 1f);
@@ -328,13 +347,13 @@ public class UIManager : MonoBehaviour
         titleRect.anchoredPosition = new Vector2(0f, -36f);
         titleRect.sizeDelta = new Vector2(-80f, 88f);
 
-        gameOverDetailsText = GetOrCreateText(gameOverPanel.transform, "Game Over Details", "Survived 00:00\nFinal Level 1\nPress R to Restart", GameOverDetailsFontSize, TextAnchor.MiddleCenter);
+        gameOverDetailsText = GetOrCreateText(gameOverPanel.transform, "Game Over Details", "생존 시간 00:00\n최종 레벨 1\n처치 수 0\n해금한 무기: 기본 탄\nR 키로 다시 시작", GameOverDetailsFontSize, TextAnchor.MiddleCenter);
         RectTransform detailsRect = gameOverDetailsText.rectTransform;
         detailsRect.anchorMin = new Vector2(0f, 0.5f);
         detailsRect.anchorMax = new Vector2(1f, 0.5f);
         detailsRect.pivot = new Vector2(0.5f, 0.5f);
-        detailsRect.anchoredPosition = new Vector2(0f, 24f);
-        detailsRect.sizeDelta = new Vector2(-90f, 160f);
+        detailsRect.anchoredPosition = new Vector2(0f, 18f);
+        detailsRect.sizeDelta = new Vector2(-100f, 240f);
 
         Button restartButton = CreateRestartButton(gameOverPanel.transform);
         restartButton.onClick.RemoveAllListeners();
@@ -366,7 +385,7 @@ public class UIManager : MonoBehaviour
         Image image = EnsureImage(pausePanel);
         image.color = new Color(0.035f, 0.045f, 0.055f, 0.96f);
 
-        pauseTitleText = GetOrCreateText(pausePanel.transform, "Pause Title", "Paused", PauseTitleFontSize, TextAnchor.MiddleCenter);
+        pauseTitleText = GetOrCreateText(pausePanel.transform, "Pause Title", "일시정지", PauseTitleFontSize, TextAnchor.MiddleCenter);
         RectTransform titleRect = pauseTitleText.rectTransform;
         titleRect.anchorMin = new Vector2(0f, 1f);
         titleRect.anchorMax = new Vector2(1f, 1f);
@@ -374,7 +393,7 @@ public class UIManager : MonoBehaviour
         titleRect.anchoredPosition = new Vector2(0f, -34f);
         titleRect.sizeDelta = new Vector2(-80f, 78f);
 
-        pauseDetailsText = GetOrCreateText(pausePanel.transform, "Pause Details", "Press Esc or P to resume\nAudio Test: T", PauseDetailsFontSize, TextAnchor.MiddleCenter);
+        pauseDetailsText = GetOrCreateText(pausePanel.transform, "Pause Details", "Esc 또는 P: 계속\n오디오 테스트: T", PauseDetailsFontSize, TextAnchor.MiddleCenter);
         RectTransform detailsRect = pauseDetailsText.rectTransform;
         detailsRect.anchorMin = new Vector2(0f, 1f);
         detailsRect.anchorMax = new Vector2(1f, 1f);
@@ -383,7 +402,7 @@ public class UIManager : MonoBehaviour
         detailsRect.sizeDelta = new Vector2(-90f, 52f);
 
         GameObject statsPanel = EnsurePanel(pausePanel.transform, "Stats Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -34f), new Vector2(830f, 350f), new Color(0f, 0f, 0f, 0.38f));
-        Text statsTitle = GetOrCreateText(statsPanel.transform, "Stats Title", "Stats Summary", StatsTitleFontSize, TextAnchor.UpperCenter);
+        Text statsTitle = GetOrCreateText(statsPanel.transform, "Stats Title", "능력치", StatsTitleFontSize, TextAnchor.UpperCenter);
         RectTransform statsTitleRect = statsTitle.rectTransform;
         statsTitleRect.anchorMin = new Vector2(0f, 1f);
         statsTitleRect.anchorMax = new Vector2(1f, 1f);
@@ -399,7 +418,7 @@ public class UIManager : MonoBehaviour
         statsRect.offsetMax = new Vector2(-34f, -72f);
         statsText.color = new Color(0.9f, 0.96f, 1f);
 
-        Button resumeButton = CreateMenuButton(pausePanel.transform, "Resume Button", "Resume", new Vector2(-170f, 36f));
+        Button resumeButton = CreateMenuButton(pausePanel.transform, "Resume Button", "계속하기", new Vector2(-170f, 36f));
         resumeButton.onClick.RemoveAllListeners();
         resumeButton.onClick.AddListener(() =>
         {
@@ -409,7 +428,7 @@ public class UIManager : MonoBehaviour
             }
         });
 
-        Button restartButton = CreateMenuButton(pausePanel.transform, "Restart Button", "Restart", new Vector2(170f, 36f));
+        Button restartButton = CreateMenuButton(pausePanel.transform, "Restart Button", "다시 시작", new Vector2(170f, 36f));
         restartButton.onClick.RemoveAllListeners();
         restartButton.onClick.AddListener(() =>
         {
@@ -455,14 +474,19 @@ public class UIManager : MonoBehaviour
         string xpMagnet = XPOrb.CurrentAttractionRadius.ToString("0.0");
         string aura = BuildAuraStats(weaponController);
         string orbit = BuildOrbitStats(weaponController);
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
+        string wave = spawner == null ? "--" : spawner.CurrentPhaseNameKorean;
+        string elite = spawner == null ? "--" : spawner.EliteSpawned ? "출현" : "대기";
+        int kills = gameManager == null ? 0 : gameManager.KillCount;
         int activeEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length;
 
         statsText.text =
-            $"HP: {hp}        Level: {level}        XP: {xp}\n" +
-            $"Damage: {damage}        Fire Rate: {fireRate}\n" +
-            $"Move Speed: {moveSpeed}        Projectile Size: {projectileSize}        Multi Shot: {projectileCount}\n" +
-            $"XP Magnet: {xpMagnet}        Survival Time: {survivalTime}        Active Enemies: {activeEnemies}\n" +
-            $"Aura Pulse: {aura}        Orbit Blade: {orbit}";
+            $"체력: {hp}        레벨: {level}        경험치: {xp}\n" +
+            $"공격력: {damage}        공격 속도: {fireRate}\n" +
+            $"이동 속도: {moveSpeed}        탄 크기: {projectileSize}        발사 수: {projectileCount}\n" +
+            $"경험치 흡수 범위: {xpMagnet}        생존 시간: {survivalTime}        활성 적: {activeEnemies}\n" +
+            $"웨이브: {wave}        처치 수: {kills}        정예 적: {elite}\n" +
+            $"오라 파동: {aura}        회전 칼날: {orbit}";
     }
 
     private static Text CreateHudText(Transform parent, string name, string content, Vector2 anchoredPosition)
@@ -479,7 +503,7 @@ public class UIManager : MonoBehaviour
 
     private static Button CreateRestartButton(Transform parent)
     {
-        return CreateMenuButton(parent, "Restart Button", "Restart", new Vector2(0f, 36f));
+        return CreateMenuButton(parent, "Restart Button", "다시 시작", new Vector2(0f, 36f));
     }
 
     private static Button CreateMenuButton(Transform parent, string name, string labelText, Vector2 anchoredPosition)
@@ -526,7 +550,7 @@ public class UIManager : MonoBehaviour
         startHintTimer = 0f;
         hint.SetActive(true);
 
-        startHintText = GetOrCreateText(hint.transform, "Hint Text", "Move: WASD / Arrow Keys    Pause: Esc / P    Tab: Stats    Audio Test: T\nChoose Upgrade: 1 / 2 / 3 or Click", StartHintFontSize, TextAnchor.MiddleCenter);
+        startHintText = GetOrCreateText(hint.transform, "Hint Text", "이동: WASD / 방향키    일시정지: Esc / P    Tab: 능력치    오디오 테스트: T\n강화 선택: 1 / 2 / 3 또는 클릭", StartHintFontSize, TextAnchor.MiddleCenter);
         RectTransform textRect = startHintText.rectTransform;
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
@@ -541,7 +565,7 @@ public class UIManager : MonoBehaviour
         Transform parent = existingHud != null ? existingHud : canvas.transform;
         runtimeStatsPanel = EnsurePanel(parent, "Runtime Stats Panel", new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(1f, 0.5f), new Vector2(-StandardMargin, 0f), new Vector2(380f, 420f), StandardPanelColor());
 
-        Text title = GetOrCreateText(runtimeStatsPanel.transform, "Stats Title", "Stats", RuntimeStatsTitleFontSize, TextAnchor.UpperCenter);
+        Text title = GetOrCreateText(runtimeStatsPanel.transform, "Stats Title", "능력치", RuntimeStatsTitleFontSize, TextAnchor.UpperCenter);
         RectTransform titleRect = title.rectTransform;
         titleRect.anchorMin = new Vector2(0f, 1f);
         titleRect.anchorMax = new Vector2(1f, 1f);
@@ -549,7 +573,7 @@ public class UIManager : MonoBehaviour
         titleRect.anchoredPosition = new Vector2(0f, -14f);
         titleRect.sizeDelta = new Vector2(-32f, 40f);
 
-        Text hint = GetOrCreateText(runtimeStatsPanel.transform, "Stats Hint", "Tab: Stats", SmallHintFontSize, TextAnchor.UpperRight);
+        Text hint = GetOrCreateText(runtimeStatsPanel.transform, "Stats Hint", "Tab: 능력치", SmallHintFontSize, TextAnchor.UpperRight);
         RectTransform hintRect = hint.rectTransform;
         hintRect.anchorMin = new Vector2(0f, 1f);
         hintRect.anchorMax = new Vector2(1f, 1f);
@@ -568,6 +592,66 @@ public class UIManager : MonoBehaviour
 
         runtimeStatsPanel.SetActive(true);
         UpdateRuntimeStatsText();
+    }
+
+    private void BuildAnnouncementPanel()
+    {
+        Canvas canvas = EnsureCanvas();
+        Transform existingHud = canvas.transform.Find("HUD");
+        Transform parent = existingHud != null ? existingHud : canvas.transform;
+        announcementPanel = EnsurePanel(parent, "Announcement Panel", new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -134f), new Vector2(900f, 92f), new Color(0.02f, 0.03f, 0.04f, 0.74f));
+        announcementGroup = announcementPanel.GetComponent<CanvasGroup>();
+        if (announcementGroup == null)
+        {
+            announcementGroup = announcementPanel.AddComponent<CanvasGroup>();
+        }
+        announcementGroup.blocksRaycasts = false;
+        announcementGroup.interactable = false;
+
+        announcementText = GetOrCreateText(announcementPanel.transform, "Announcement Text", "", AnnouncementFontSize, TextAnchor.MiddleCenter);
+        RectTransform textRect = announcementText.rectTransform;
+        textRect.anchorMin = Vector2.zero;
+        textRect.anchorMax = Vector2.one;
+        textRect.offsetMin = new Vector2(28f, 10f);
+        textRect.offsetMax = new Vector2(-28f, -10f);
+        announcementText.color = new Color(1f, 0.92f, 0.44f);
+
+        announcementPanel.SetActive(false);
+    }
+
+    public void ShowAnnouncement(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return;
+        }
+
+        if (announcementPanel == null)
+        {
+            BuildAnnouncementPanel();
+        }
+
+        announcementText.text = message;
+        announcementTimer = AnnouncementLifetime;
+        announcementGroup.alpha = 1f;
+        announcementPanel.SetActive(true);
+    }
+
+    private void UpdateAnnouncement()
+    {
+        if (announcementPanel == null || !announcementPanel.activeSelf || announcementGroup == null)
+        {
+            return;
+        }
+
+        announcementTimer -= Time.unscaledDeltaTime;
+        if (announcementTimer <= 0f)
+        {
+            announcementPanel.SetActive(false);
+            return;
+        }
+
+        announcementGroup.alpha = announcementTimer < 0.75f ? Mathf.Clamp01(announcementTimer / 0.75f) : 1f;
     }
 
     private static GameObject EnsurePanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 anchoredPosition, Vector2 size, Color color)
@@ -676,8 +760,10 @@ public class UIManager : MonoBehaviour
         string projectileCount = weapon == null ? "--" : weapon.ProjectileCount.ToString();
         string xpMagnet = XPOrb.CurrentAttractionRadius.ToString("0.0");
         string level = levelSystem == null ? "--" : levelSystem.CurrentLevel.ToString();
-        string aura = BuildAuraStats(weaponController);
-        string orbit = BuildOrbitStats(weaponController);
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
+        string wave = spawner == null ? "--" : spawner.CurrentPhaseNameKorean;
+        string elite = spawner == null ? "--" : spawner.EliteSpawned ? "출현" : "대기";
+        string kills = gameManager == null ? "0" : gameManager.KillCount.ToString();
         string survivalTime = "--:--";
         if (gameManager != null)
         {
@@ -687,38 +773,68 @@ public class UIManager : MonoBehaviour
         }
 
         return
-            $"HP     {hp}\n" +
-            $"DMG    {damage}\n" +
-            $"Rate   {fireRate}\n" +
-            $"Speed  {moveSpeed}\n" +
-            $"Size   {projectileSize}\n" +
-            $"Shots  {projectileCount}\n" +
-            $"Magnet {xpMagnet}\n" +
-            $"Aura   {aura}\n" +
-            $"Orbit  {orbit}\n" +
-            $"Lv/Time {level} / {survivalTime}";
+            $"체력   {hp}\n" +
+            $"공격력 {damage}\n" +
+            $"공속   {fireRate}\n" +
+            $"이속   {moveSpeed}\n" +
+            $"탄크기 {projectileSize}\n" +
+            $"발사수 {projectileCount}\n" +
+            $"흡수   {xpMagnet}\n" +
+            $"웨이브 {wave}\n" +
+            $"처치   {kills} / 정예 {elite}\n" +
+            $"무기   오라 {BuildWeaponShortLabel(weaponController, true)} / 칼날 {BuildWeaponShortLabel(weaponController, false)}\n" +
+            $"레벨/시간 {level} / {survivalTime}";
     }
 
     private static string BuildAuraStats(WeaponController weaponController)
     {
         if (weaponController == null || !weaponController.HasAuraPulse || weaponController.AuraPulse == null)
         {
-            return "Locked";
+            return "잠김";
         }
 
         AuraPulseWeapon aura = weaponController.AuraPulse;
-        return $"On {aura.Damage:0.0} dmg / {aura.Radius:0.0}r / {aura.Cooldown:0.0}s";
+        return $"해금 {aura.Damage:0.0} 피해 / {aura.Radius:0.0}범위 / {aura.Cooldown:0.0}초";
     }
 
     private static string BuildOrbitStats(WeaponController weaponController)
     {
         if (weaponController == null || !weaponController.HasOrbitBlade || weaponController.OrbitBlade == null)
         {
-            return "Locked";
+            return "잠김";
         }
 
         OrbitBladeWeapon orbit = weaponController.OrbitBlade;
-        return $"On {orbit.OrbitCount} blade / {orbit.OrbitRadius:0.0}r";
+        return $"해금 {orbit.OrbitCount}개 / {orbit.OrbitRadius:0.0}범위";
+    }
+
+    private static string BuildWeaponShortLabel(WeaponController weaponController, bool aura)
+    {
+        if (weaponController == null)
+        {
+            return "잠김";
+        }
+
+        return aura
+            ? weaponController.HasAuraPulse ? "해금" : "잠김"
+            : weaponController.HasOrbitBlade ? "해금" : "잠김";
+    }
+
+    private static string BuildUnlockedWeaponList()
+    {
+        WeaponController weaponController = FindFirstObjectByType<WeaponController>();
+        string weapons = "기본 탄";
+        if (weaponController != null && weaponController.HasAuraPulse)
+        {
+            weapons += ", 오라 파동";
+        }
+
+        if (weaponController != null && weaponController.HasOrbitBlade)
+        {
+            weapons += ", 회전 칼날";
+        }
+
+        return weapons;
     }
 
     private static bool CanToggleRuntimeStats()

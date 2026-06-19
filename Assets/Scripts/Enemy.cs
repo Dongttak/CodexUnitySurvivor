@@ -163,6 +163,11 @@ public class Enemy : MonoBehaviour
             AudioManager.Instance.PlayEnemyDeath();
         }
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RegisterKill(enemyTypeName);
+        }
+
         XPOrb.Create(transform.position, xpValue);
         Release();
     }
@@ -267,7 +272,7 @@ public class Enemy : MonoBehaviour
         }
 
         float ratio = Mathf.Clamp01(currentHealth / maxHealth);
-        bool shouldShow = ratio < 0.999f || enemyTypeName == "Tank";
+        bool shouldShow = ratio < 0.999f || enemyTypeName == "Tank" || enemyTypeName == "Elite";
         hpBarBorder.enabled = shouldShow;
         hpBarBack.enabled = shouldShow;
         hpBarFill.enabled = shouldShow;

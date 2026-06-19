@@ -1,125 +1,84 @@
 # Codex Unity Survivor
 
-A Unity 6 2D top-down auto-battler survival MVP built with placeholder visuals.
+Unity 6 기반 2D 탑다운 오토 배틀러 생존 MVP입니다. 플레이스홀더 비주얼과 런타임 생성 절차적 SFX만 사용하며, 외부 에셋은 추가하지 않았습니다.
 
-## How to Run
+## 실행 방법
 
-1. Open the project in Unity 6.
-2. Open `Assets/Scenes/SampleScene.unity`.
-3. Press Play.
+1. Unity 6에서 프로젝트를 엽니다.
+2. `Assets/Scenes/SampleScene.unity`를 엽니다.
+3. Play를 누릅니다.
 
-## Controls
+## 조작
 
-- Move: `WASD` or arrow keys.
-- Pause/resume: `Esc` or `P`.
-- Toggle compact runtime stats: `Tab`.
-- Play audio test tone: `T`.
-- View full current player stats: pause with `Esc` or `P`.
-- Level-up choices: click a button or press `1`, `2`, or `3`.
-- Restart from pause: click `Restart`.
-- Restart after game over: click `Restart` or press `R`.
+- 이동: `WASD` 또는 방향키
+- 일시정지/계속하기: `Esc` 또는 `P`
+- 능력치 패널 표시/숨김: `Tab`
+- 오디오 테스트 톤: `T`
+- 강화 선택: 클릭 또는 `1`, `2`, `3`
+- 다시 시작: 일시정지/게임 오버 화면의 `다시 시작` 버튼 또는 게임 오버 중 `R`
 
-## What Was Built
+## 현재 구현
 
-- Player movement with 2D physics.
-- Camera follow.
-- Enemy spawning around the player.
-- Basic, Fast, and Tank enemies spawn over time, chase the player, and damage on contact.
-- Automatic nearest-enemy projectile attacks through the starting `Basic Bolt` weapon.
-- Unlockable weapon variety:
-  - `Aura Pulse`: periodically damages nearby enemies with a visible area pulse.
-  - `Orbit Blade`: creates a small orbiting blade that damages enemies it touches.
-- Projectile damage, enemy death, and XP orb drops.
-- Large high-contrast floating damage numbers and larger enemy HP bars for combat readability.
-- XP collection and level-ups.
-- Paused level-up upgrade choices:
-  - Projectile damage
-  - Fire rate
-  - Movement speed
-  - Max HP
-  - Heal
-  - Projectile size
-  - XP magnet
-  - Multi shot
-  - Unlock Aura Pulse
-  - Unlock Orbit Blade
-- Level-up presents 3 random non-duplicate upgrade choices from the available pool.
-- Weapon unlock upgrades appear only while that weapon is still locked.
-- Enemy spawn interval ramps down over time.
-- Runtime HUD for HP, level, XP, and survival time.
-- Readable HUD panels with HP text/bar, XP text/bar, level, timer, and a short start hint.
-- Clearer level-up upgrade cards with names, descriptions, and `1`/`2`/`3` shortcuts.
-- Game over screen with survival time, final level, restart instruction, and restart button.
-- Pause menu with resume, restart, and current player stats.
-- Compact runtime stats panel visible by default with `Tab` toggle.
-- Conservative polish pass:
-  - Clearer placeholder colors and sizing for player, enemies, projectiles, and XP.
-  - Simple hit, death, projectile impact, and XP pickup pulse feedback.
-  - Clearer level-up choice labels with short upgrade descriptions.
-  - Gentler early spawn pacing for the first minute.
-- Procedural placeholder SFX for shooting, enemy hits/deaths, XP pickup, level-up, player damage, and game over.
-- Procedural placeholder SFX also play when an upgrade is selected.
-- A short procedural audio test tone plays with `T` during gameplay or pause.
-- Simple runtime pooling for hot combat objects:
-  - Projectiles
-  - XP orbs
-  - Feedback pulses
-  - Floating damage numbers
-  - Enemies
-- UI/UX readability pass:
-  - Semi-transparent HUD panels keep stats readable without covering the center of combat.
-  - Canvas uses `Scale With Screen Size`, `1920x1080` reference resolution, and a balanced width/height match.
-  - HUD, timer, start hint, level-up, pause, and game-over text use explicit larger font sizes.
-  - Responsive UI pass improves readability across common 16:9, 16:10, 4K, and ultrawide Game view sizes.
-  - HUD anchors keep HP/XP/level at top-left, the timer at top-center, the start hint at bottom-center, and runtime stats on the right side.
-  - Level-up, pause, and game-over panels are larger centered modals with stronger backing panels and more generous spacing.
-  - Enemy HP bars stay hidden on full-health enemies and appear after damage.
-  - Floating damage numbers use larger world-space text, a longer readable lifetime, and a dark shadow.
-  - A start hint explains movement, pause, and upgrade selection for first-time players.
-  - Pause menu stats show HP, level, XP, damage, fire rate, move speed, projectile size, multi-shot count, XP magnet range, survival time, and active enemies.
-  - Runtime stats HUD shows key combat stats during gameplay: HP, damage, fire rate, move speed, projectile size, shot count, XP magnet range, weapon unlock state, level, and survival time.
-  - Enemy HP bars are larger for high-resolution displays, with a dark border/backplate and high-contrast fill; damaged enemies show bars, and Tank enemies show bars even at full HP.
+- 플레이어 이동, 카메라 추적, 적 추적, 접촉 피해
+- 자동 공격 기본 무기 `기본 탄`
+- 해금형 무기 `오라 파동`, `회전 칼날`
+- 경험치 오브, 레벨업, 3개 랜덤 강화 선택
+- 공격력, 공격 속도, 이동 속도, 최대 체력, 회복, 탄 크기, 경험치 자석, 추가 발사 강화
+- 큰 피해 숫자, 적 HP 바, 피격/사망/획득 피드백
+- 발사체, 경험치 오브, 피해 숫자, 피드백, 적 오브젝트 풀링
+- 절차적 SFX: 발사, 피격, 적 사망, 경험치 획득, 레벨업, 강화 선택, 플레이어 피해, 게임 오버, 테스트 톤
+- 반응형 HUD, 일시정지 메뉴, 런타임 능력치 패널, 게임 오버 결과 화면
+- 한국어 런타임 UI와 웨이브 안내
 
-All visuals and sound effects are generated placeholders at runtime. No external art, audio, paid assets, or extra packages were added.
+## 웨이브 / 디렉터
 
-## Audio / AirPods Troubleshooting
+- `0:00 - 1:00`: 기본 적만 등장, 완만한 시작
+- `1:00 - 2:00`: 빠른 적 등장, 약간 빠른 스폰
+- `2:00 - 3:30`: 탱커 적 등장, 혼합 구성
+- `3:30 - 5:00`: 적의 공세가 거세짐, 빠른 적 비중 증가
+- `5:00`: 정예 적 1회 등장
 
-This project uses Unity `AudioSource` playback with runtime-generated procedural `AudioClip` tones. The gameplay code does not call FMOD APIs directly and does not try to switch Unity or macOS output devices.
+웨이브 변화 시 상단 중앙에 한국어 안내가 잠깐 표시됩니다.
 
-If AirPods or another Bluetooth output does not play sound in the Unity Editor:
+## 적 종류
 
-1. Set the macOS output device to AirPods before starting Play Mode.
-2. Set the macOS input device to the MacBook microphone or another non-AirPods microphone if possible.
-3. Restart the Unity Editor after changing Bluetooth output devices.
-4. Avoid disconnecting or reconnecting AirPods during Play Mode.
-5. If an FMOD output-device error appears, restart the Unity Editor.
-6. Try MacBook Speakers to distinguish project audio bugs from Unity Editor/device-output issues.
+- 기본 적: 균형형 체력/속도/피해/경험치
+- 빠른 적: 낮은 체력, 빠른 이동, 작은 노란색 계열 비주얼
+- 탱커 적: 높은 체력, 느린 이동, 큰 보라색 계열 비주얼
+- 정예 적: 매우 높은 체력, 큰 청록색 비주얼, 높은 경험치 보상, HP 바 상시 표시
 
-Press `T` in gameplay or pause to play a short test tone. If `T` and normal SFX work on MacBook Speakers but not AirPods, the issue is likely in the Unity Editor, macOS audio routing, or Bluetooth device state rather than this project's SFX code.
+## 무기
 
-## Enemy Variety
+- 기본 탄: 가장 가까운 적을 자동 조준해 발사합니다.
+- 오라 파동: 강화 선택으로 해금되며, 주기적으로 주변 적에게 피해를 줍니다.
+- 회전 칼날: 강화 선택으로 해금되며, 플레이어 주변을 돌며 닿은 적에게 피해를 줍니다.
 
-- Basic Enemy: balanced HP, speed, damage, and XP.
-- Fast Enemy: lower HP, faster movement, smaller orange visual, lower contact damage.
-- Tank Enemy: higher HP, slower movement, larger purple visual, higher XP reward.
+해금형 무기는 한 번 획득하면 같은 해금 선택지가 다시 나오지 않습니다.
 
-Enemy availability changes over time:
+## UI
 
-- `0:00` Basic only.
-- `1:00` mostly Basic, some Fast.
-- `2:00+` Basic, Fast, and Tank.
+- HUD: 체력, 레벨, 경험치, 생존 시간
+- 능력치 패널: 공격력, 공격 속도, 이동 속도, 체력, 탄 크기, 발사 수, 경험치 흡수 범위, 웨이브, 처치 수, 정예 적 상태, 무기 해금 상태
+- 일시정지 메뉴: 계속하기, 다시 시작, 전체 능력치
+- 레벨업 화면: `강화 선택` 제목과 `[1]`, `[2]`, `[3]` 단축키가 있는 3개 선택지
+- 게임 오버 화면: 생존 시간, 최종 레벨, 처치 수, 해금한 무기, 다시 시작 안내
 
-## Weapon Variety
+## 오디오 / AirPods 문제 해결
 
-- `Basic Bolt`: the starting auto-fire projectile weapon. It targets the nearest enemy and continues to use projectile pooling, Damage Up, Fire Rate Up, Projectile Size Up, Multi Shot, damage numbers, HP bars, and SFX.
-- `Aura Pulse`: unlocked from level-up choices. It pulses around the player every few seconds, damages enemies in its radius, uses the existing pooled feedback pulse visual, and triggers existing procedural SFX through normal hit/shoot paths.
-- `Orbit Blade`: unlocked from level-up choices. It creates a small orbiting placeholder blade around the player; enemies touching it take periodic damage with a short per-enemy cooldown.
+이 프로젝트는 Unity `AudioSource`와 런타임 생성 `AudioClip`만 사용합니다. 프로젝트 코드는 FMOD API를 직접 호출하지 않으며, Unity/macOS 출력 장치를 코드로 전환하지 않습니다.
 
-Aura Pulse and Orbit Blade unlock choices stop appearing after their weapon is acquired.
+AirPods 또는 Bluetooth 출력에서 소리가 나지 않으면:
 
-## Scene Setup
+1. Play Mode 전에 macOS 출력 장치를 AirPods로 설정합니다.
+2. 가능하면 macOS 입력 장치는 MacBook 마이크 같은 비-AirPods 입력으로 설정합니다.
+3. Bluetooth 출력 장치를 바꾼 뒤 Unity Editor를 재시작합니다.
+4. Play Mode 중 AirPods 연결/해제를 피합니다.
+5. FMOD 출력 장치 오류가 보이면 Unity Editor를 재시작합니다.
+6. MacBook Speakers에서 `T` 테스트 톤과 SFX가 들리는지 확인해 프로젝트 코드 문제인지 출력 장치 문제인지 구분합니다.
 
-`SampleScene` contains:
+## 씬 구성
+
+`SampleScene` 루트 오브젝트:
 
 - `GameManager`
 - `Player`
@@ -129,4 +88,4 @@ Aura Pulse and Orbit Blade unlock choices stop appearing after their weapon is a
 - `EventSystem`
 - `Global Light 2D`
 
-The game should be playable without additional manual scene setup.
+추가 수동 씬 설정 없이 Play를 누르면 실행되도록 구성되어 있습니다.

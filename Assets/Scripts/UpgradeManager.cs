@@ -48,7 +48,7 @@ public class UpgradeManager : MonoBehaviour
         activeLevelSystem = levelSystem;
         activeChoices.Clear();
         activeChoices.AddRange(choices);
-        titleText.text = "Choose an Upgrade";
+        titleText.text = "강화 선택";
         ConfigureButton(damageButton, 0, () => Choose(0));
         ConfigureButton(fireRateButton, 1, () => Choose(1));
         ConfigureButton(moveSpeedButton, 2, () => Choose(2));
@@ -100,7 +100,7 @@ public class UpgradeManager : MonoBehaviour
         Image background = EnsureImage(panel);
         background.color = new Color(0.035f, 0.045f, 0.06f, 0.96f);
 
-        titleText = GetOrCreateText(panel.transform, "Title", "Choose an Upgrade", TitleFontSize, TextAnchor.MiddleCenter);
+        titleText = GetOrCreateText(panel.transform, "Title", "강화 선택", TitleFontSize, TextAnchor.MiddleCenter);
         SetRect(titleText.rectTransform, new Vector2(0f, 224f), new Vector2(760f, 74f));
 
         damageButton = CreateChoiceButton("Damage Button", new Vector2(0f, 110f));

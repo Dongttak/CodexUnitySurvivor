@@ -200,24 +200,24 @@ public class LevelSystem : MonoBehaviour
     {
         List<UpgradeChoice> pool = new List<UpgradeChoice>
         {
-            new UpgradeChoice(UpgradeType.ProjectileDamage, "Sharper Projectiles", "More damage per hit"),
-            new UpgradeChoice(UpgradeType.FireRate, "Faster Casting", "Shoot a little more often"),
-            new UpgradeChoice(UpgradeType.MoveSpeed, "Quicker Footwork", "Move faster to escape crowds"),
-            new UpgradeChoice(UpgradeType.MaxHealth, "Max HP Up", "Raise max HP and heal by the same amount"),
-            new UpgradeChoice(UpgradeType.Heal, "Patch Up", "Instantly restore some HP"),
-            new UpgradeChoice(UpgradeType.ProjectileSize, "Bigger Shots", "Larger projectiles with wider collision"),
-            new UpgradeChoice(UpgradeType.XPMagnet, "XP Magnet", "Pull XP orbs from farther away"),
-            new UpgradeChoice(UpgradeType.MultiShot, "Multi Shot", "Fire one additional projectile per attack")
+            new UpgradeChoice(UpgradeType.ProjectileDamage, "공격력 증가", "탄 공격력 증가"),
+            new UpgradeChoice(UpgradeType.FireRate, "공격 속도 증가", "더 빠르게 발사"),
+            new UpgradeChoice(UpgradeType.MoveSpeed, "이동 속도 증가", "더 빠르게 이동"),
+            new UpgradeChoice(UpgradeType.MaxHealth, "최대 체력 증가", "최대 체력 증가 및 회복"),
+            new UpgradeChoice(UpgradeType.Heal, "체력 회복", "체력 회복"),
+            new UpgradeChoice(UpgradeType.ProjectileSize, "탄 크기 증가", "탄 크기 증가"),
+            new UpgradeChoice(UpgradeType.XPMagnet, "경험치 자석", "경험치 획득 범위 증가"),
+            new UpgradeChoice(UpgradeType.MultiShot, "추가 발사", "탄을 추가로 발사")
         };
 
         if (weaponController != null && !weaponController.HasAuraPulse)
         {
-            pool.Add(new UpgradeChoice(UpgradeType.UnlockAuraPulse, "Unlock Aura Pulse", "Periodic area pulse damages nearby enemies"));
+            pool.Add(new UpgradeChoice(UpgradeType.UnlockAuraPulse, "오라 파동 해금", "주기적으로 주변 적에게 피해"));
         }
 
         if (weaponController != null && !weaponController.HasOrbitBlade)
         {
-            pool.Add(new UpgradeChoice(UpgradeType.UnlockOrbitBlade, "Unlock Orbit Blade", "A rotating blade damages enemies it touches"));
+            pool.Add(new UpgradeChoice(UpgradeType.UnlockOrbitBlade, "회전 칼날 해금", "주변을 도는 칼날이 적에게 피해"));
         }
 
         return pool;

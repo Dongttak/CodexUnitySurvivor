@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public bool IsGameOver { get; private set; }
     public bool IsPaused { get; private set; }
     public float SurvivalTime { get; private set; }
+    public int KillCount { get; private set; }
     public bool IsGameplayActive => !IsGameOver && Time.timeScale > 0f;
     private bool isUpgradePaused;
 
@@ -174,6 +175,16 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void RegisterKill(string enemyTypeName)
+    {
+        if (IsGameOver)
+        {
+            return;
+        }
+
+        KillCount++;
     }
 
     private void HandlePlayerDied()
