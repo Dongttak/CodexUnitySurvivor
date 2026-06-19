@@ -348,3 +348,23 @@ Known limitations:
 
 Known limitations:
 - The fix was designed for the runtime-generated HUD bars only; enemy HP bars already use world-space SpriteRenderers and were not changed.
+
+## 2026-06-19 - HP Text Layout Bugfix Pass 01
+
+- Continued from branch `ai-fix-hp-xp-bars-pass-01` and worked on branch `ai-fix-hp-text-layout-pass-01`.
+- Manual bug report addressed: HP bar updates correctly, but Korean HP text could appear outside the HP bar or feel detached from the HP panel.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `list`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`; Unity was connected, expected root objects were present, and console errors were empty.
+- Reviewed `UIManager` and runtime HUD creation code before editing.
+- Root cause: HP text was created as a separate sibling inside the left HUD panel with a fixed top-left position, while the HP bar was a separate sibling lower in the panel. Longer Korean HP values and scaling could make the text visually detach from the bar.
+- Fixed the layout by making HP text a child of the `HP Bar` container, stretching it inside the bar with 8px horizontal padding, and centering it over the bar fill.
+- Increased the HP bar height from `24` to `40` and used a `26` point overlay font so Korean HP text remains readable inside the bar.
+- Left XP text and XP bar behavior unchanged because the reported issue was specific to HP text containment.
+- Updated `PLAYTEST_CHECKLIST.md` with checks for HP text containment after damage, healing, Max HP Up, and resolution changes.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors after the layout change.
+- Entered Play Mode through Hera and validated HP text parent is `HP Bar`, alignment is `MiddleCenter`, anchors stretch from `(0, 0)` to `(1, 1)`, and offsets are `(8, 0)` / `(-8, 0)`.
+- Runtime probes confirmed HP text remained inside the HP bar after damage (`체력 85 / 110`), heal (`체력 95 / 110`), and Max HP increase (`체력 115 / 130`).
+- Runtime probes also confirmed HP bar fill width still changed and XP bar fill still changed after XP gain.
+- Stopped Play Mode through Hera and rechecked Unity console errors; no errors were returned.
+
+Known limitations:
+- Layout validation uses runtime RectTransform probes plus manual checklist coverage; final visual confirmation at every target resolution should still be done in the Unity Game view.

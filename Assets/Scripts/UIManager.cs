@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     private const int RuntimeStatsRowFontSize = 26;
     private const int SmallHintFontSize = 22;
     private const int AnnouncementFontSize = 44;
+    private const int BarOverlayFontSize = 26;
     private const float StandardMargin = 32f;
     private const float PanelAlpha = 0.86f;
     private const float AnnouncementLifetime = 3f;
@@ -303,8 +304,8 @@ public class UIManager : MonoBehaviour
         rect.offsetMax = Vector2.zero;
 
         GameObject leftPanel = EnsurePanel(hud.transform, "Left HUD Panel", new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(StandardMargin, -StandardMargin), new Vector2(500f, 206f), StandardPanelColor());
-        hpText = CreateHudText(leftPanel.transform, "HP Text", "체력 100 / 100", new Vector2(20f, -16f));
-        hpBarFill = EnsureProgressBar(leftPanel.transform, "HP Bar", new Vector2(20f, -62f), new Vector2(440f, 24f), new Color(0.2f, 0.95f, 0.35f, 0.95f));
+        hpBarFill = EnsureProgressBar(leftPanel.transform, "HP Bar", new Vector2(20f, -18f), new Vector2(440f, 40f), new Color(0.2f, 0.95f, 0.35f, 0.95f));
+        hpText = CreateBarOverlayText(hpBarFill.transform.parent, "HP Text", "체력 100 / 100");
         levelText = CreateHudText(leftPanel.transform, "Level Text", "레벨 1", new Vector2(20f, -96f));
         xpText = CreateHudText(leftPanel.transform, "XP Text", "경험치 0 / 4", new Vector2(20f, -136f));
         xpBarFill = EnsureProgressBar(leftPanel.transform, "XP Bar", new Vector2(20f, -176f), new Vector2(440f, 18f), new Color(0.35f, 0.78f, 1f, 0.95f));
@@ -498,6 +499,19 @@ public class UIManager : MonoBehaviour
         rect.pivot = new Vector2(0f, 1f);
         rect.anchoredPosition = anchoredPosition;
         rect.sizeDelta = new Vector2(452f, 42f);
+        return text;
+    }
+
+    private static Text CreateBarOverlayText(Transform parent, string name, string content)
+    {
+        Text text = GetOrCreateText(parent, name, content, BarOverlayFontSize, TextAnchor.MiddleCenter);
+        RectTransform rect = text.rectTransform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.offsetMin = new Vector2(8f, 0f);
+        rect.offsetMax = new Vector2(-8f, 0f);
+        text.color = Color.white;
         return text;
     }
 
