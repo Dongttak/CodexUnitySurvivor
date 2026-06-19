@@ -328,3 +328,23 @@ Known limitations:
 - Korean glyph rendering depends on Unity's built-in legacy runtime font behavior on the local editor; manual visual review is required to confirm no missing glyph boxes.
 - The Elite enemy uses the existing chase/contact enemy logic only; it does not have a unique boss pattern.
 - The 5-minute elite timing is validated through code and Play Mode smoke checks, but full real-time 5-minute manual playtest is still recommended.
+
+## 2026-06-19 - HP And XP Bar Bugfix Pass 01
+
+- Created and switched to branch `ai-fix-hp-xp-bars-pass-01` from `ai-korean-ui-wave-director-pass-01`.
+- Manual bug report addressed: Korean HUD HP and XP text could update, but the visible HP/XP bar fill appeared static during gameplay.
+- Ran Hera preflight with `/Users/dongttak/go/bin/hera-agent-unity status`, `list`, `console --type error`, `scene --action info`, and `find_gameobjects --limit 0`; Unity was connected, `SampleScene` was clean, expected root objects were present, and console errors were empty.
+- Reviewed `UIManager`, `PlayerHealth`, `LevelSystem`, `XPOrb`, `UpgradeManager`, and `GameManager` before editing.
+- Root cause: runtime HUD progress fills used `Image.Type.Filled` on generated uGUI `Image` objects without a sprite, so changing `fillAmount` was not a reliable visible crop path.
+- Fixed HP and XP bars by resizing the fill `RectTransform` width from the left edge based on a clamped ratio instead of relying on filled-image sprite behavior.
+- `UIManager.SetHealth` now updates text and calls `SetProgressBarFill(current / max)`.
+- `UIManager.SetXP` now updates text and calls `SetProgressBarFill(currentXP / xpToNextLevel)`.
+- Kept Korean HUD labels, runtime stats, pause UI, level-up UI, game-over UI, announcements, damage numbers, and enemy HP bars intact.
+- Updated `PLAYTEST_CHECKLIST.md` with focused HP/XP bar checks for damage, heal, Max HP Up, XP pickup, level-up reset, restart, and Korean text.
+- Refreshed Unity and requested compilation through Hera; console checks returned no errors after the script change.
+- Entered Play Mode through Hera and validated runtime HUD fill objects exist.
+- In a fresh Play Mode probe, HP fill width changed from `436` to `336.9` after damage, to `376.5` after heal, and to `385.7` after Max HP Up recalculation.
+- In the same probe, XP fill width changed from `0` to `109` after gaining `1 / 4` XP, then reset to `0` when level-up changed the display to `0 / 6`.
+
+Known limitations:
+- The fix was designed for the runtime-generated HUD bars only; enemy HP bars already use world-space SpriteRenderers and were not changed.

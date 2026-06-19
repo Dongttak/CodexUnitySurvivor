@@ -182,7 +182,7 @@ public class UIManager : MonoBehaviour
 
         if (hpBarFill != null)
         {
-            hpBarFill.fillAmount = maximum <= 0f ? 0f : Mathf.Clamp01(current / maximum);
+            SetProgressBarFill(hpBarFill, maximum <= 0f ? 0f : current / maximum);
         }
     }
 
@@ -203,7 +203,7 @@ public class UIManager : MonoBehaviour
 
         if (xpBarFill != null)
         {
-            xpBarFill.fillAmount = required <= 0 ? 0f : Mathf.Clamp01((float)current / required);
+            SetProgressBarFill(xpBarFill, required <= 0 ? 0f : (float)current / required);
         }
     }
 
@@ -680,19 +680,49 @@ public class UIManager : MonoBehaviour
         GameObject root = EnsurePanel(parent, name, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), anchoredPosition, size, new Color(0f, 0f, 0f, 0.58f));
         GameObject fillObject = GetOrCreateChild(root.transform, "Fill");
         RectTransform fillRect = EnsureRectTransform(fillObject);
-        fillRect.anchorMin = Vector2.zero;
-        fillRect.anchorMax = Vector2.one;
-        fillRect.offsetMin = new Vector2(2f, 2f);
-        fillRect.offsetMax = new Vector2(-2f, -2f);
+        fillRect.anchorMin = new Vector2(0f, 0.5f);
+        fillRect.anchorMax = new Vector2(0f, 0.5f);
+        fillRect.pivot = new Vector2(0f, 0.5f);
+        fillRect.anchoredPosition = new Vector2(2f, 0f);
+        fillRect.sizeDelta = new Vector2(Mathf.Max(0f, size.x - 4f), Mathf.Max(0f, size.y - 4f));
 
         Image fill = EnsureImage(fillObject);
         fill.color = fillColor;
-        fill.type = Image.Type.Filled;
-        fill.fillMethod = Image.FillMethod.Horizontal;
-        fill.fillOrigin = (int)Image.OriginHorizontal.Left;
+        fill.type = Image.Type.Simple;
         fill.fillAmount = 1f;
         fill.raycastTarget = false;
         return fill;
+    }
+
+    private static void SetProgressBarFill(Image fill, float rawRatio)
+    {
+        if (fill == null)
+        {
+            return;
+        }
+
+        float ratio = Mathf.Clamp01(rawRatio);
+        RectTransform fillRect = fill.rectTransform;
+        RectTransform parentRect = fillRect.parent as RectTransform;
+        if (parentRect == null)
+        {
+            fill.fillAmount = ratio;
+            return;
+        }
+
+        float parentWidth = parentRect.rect.width > 0f ? parentRect.rect.width : parentRect.sizeDelta.x;
+        float parentHeight = parentRect.rect.height > 0f ? parentRect.rect.height : parentRect.sizeDelta.y;
+        float maxWidth = Mathf.Max(0f, parentWidth - 4f);
+        float height = Mathf.Max(0f, parentHeight - 4f);
+
+        // The bars are generated at runtime, so resize the fill rect directly instead of
+        // relying on Image.Type.Filled sprite behavior.
+        fillRect.anchorMin = new Vector2(0f, 0.5f);
+        fillRect.anchorMax = new Vector2(0f, 0.5f);
+        fillRect.pivot = new Vector2(0f, 0.5f);
+        fillRect.anchoredPosition = new Vector2(2f, 0f);
+        fillRect.sizeDelta = new Vector2(maxWidth * ratio, height);
+        fill.enabled = ratio > 0.001f;
     }
 
     private static Text GetOrCreateText(Transform parent, string name, string content, int fontSize, TextAnchor alignment)
